@@ -19,6 +19,7 @@ const theme = createTheme({
     buttonPrimaryBackground: palette.black,
     whiteText: palette.white,
     brightShadow: palette.shadow,
+    headerColor: palette.black,
     primaryText: palette.black,
     createButton: palette.black,
     shadow: palette.black,
@@ -73,6 +74,14 @@ const theme = createTheme({
     xl: 40,
   },
   textVariants: {
+    mainHeader: {
+      fontFamily: fonts.bold,
+      fontSize: 40,
+      color: "whiteText",
+      textShadowColor: 'headerColor',
+      textShadowOffset: { width: 2, height: 2 },
+      textShadowRadius: 2,
+    },
     header: {
       fontFamily: fonts.bold,
       fontWeight: 'bold',
