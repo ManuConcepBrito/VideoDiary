@@ -9,7 +9,7 @@ export default function HelloWorld() {
     const onPress = () => alert("I am pressed");
     return (
         <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-            <Button label="Fuck you bitches" onPress={onPress}/>
+            <Text variant="mainHeader">Your Video Diary</Text>
         </View>
     );
 }
