@@ -9,14 +9,18 @@ const palette = {
   greenPrimary: '#0ECD9D',
   greenDark: '#0A906E',
 
-  black: '#0B0B0B',
+  black: '#000000',
   white: '#F0F2F3',
+  shadow: "#81878A"
 };
 
 const theme = createTheme({
   colors: {
     mainBackground: palette.white,
     cardPrimaryBackground: palette.purplePrimary,
+    buttonPrimaryBackground: palette.black,
+    whiteText: palette.white,
+    brightShadow: palette.shadow
   },
   spacing: {
     s: 8,
@@ -28,14 +32,34 @@ const theme = createTheme({
     phone: 0,
     tablet: 768,
   },
+  buttonVariants: {
+    primary: {
+      backgroundColor: "buttonPrimaryBackground",
+      height: 54,
+      width: 245,
+      alignItems: 'center',
+      justifyContent: 'center',
+      shadowColor: 'brightShadow',
+      shadowOpacity: 1,
+      shadowOffset: { width: 3, height: 3 },
+      elevation: 5,
+    },
+  },
+  border: {
+    s: 8,
+    m: 16,
+    l: 24,
+    xl: 40,
+  },
   textVariants: {
     header: {
       fontFamily: "ChakraPetch_700Bold",
       fontSize: 40
     },
-    button: {
+    buttonPrimary: {
       fontFamily: "ChakraPetch_700Bold",
-      fontSize: 20
+      fontSize: 20,
+      color: "whiteText"
     }
   }
 });
