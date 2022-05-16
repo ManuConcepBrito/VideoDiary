@@ -13,6 +13,7 @@ import Text from './Text';
 type Props = VariantProps<Theme, "buttonVariants"> & {
   label: string;
   onPress?: () => void;
+  variant?: string;
 };
 
 const ButtonContainer = createRestyleComponent<
@@ -21,11 +22,11 @@ const ButtonContainer = createRestyleComponent<
 >([createVariant({ themeKey: "buttonVariants" })], Box);
 
 
-const Button = ({label, onPress}: Props) => {
+const Button = ({label, onPress, variant}: Props) => {
 
   return (
-    <ButtonContainer variant="primary">
-      <TouchableOpacity onPress={() => alert("I am pressed")}>
+    <ButtonContainer variant={variant}>
+      <TouchableOpacity onPress={onPress}>
         <Box>
           <Text variant="buttonPrimary" >{label}</Text>
         </Box>

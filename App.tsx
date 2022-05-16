@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import VideoList from './src/components/VideoList';
 import HelloWorld from './src/components/atoms/HellowWorld';
 import Button from './src/components/atoms/Button';
+import TextInputGroup from './src/components/atoms/TextInputGroup';
 import {ThemeProvider} from '@shopify/restyle';
 import theme from './src/res/theme';
 import {useFonts, ChakraPetch_700Bold} from '@expo-google-fonts/chakra-petch'
@@ -23,7 +24,7 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>{
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="HelloWorld"
+        <Stack.Navigator initialRouteName="TextInput"
           screenOptions={{
           headerShown: false
           }}
@@ -31,6 +32,7 @@ const App = () => {
           <Stack.Screen name="VideoList" component={VideoList} />
           <Stack.Screen name="HelloWorld" component={HelloWorld} />
           <Stack.Screen name="Button" component={Button} />
+          <Stack.Screen name="TextInput" component={TextInputGroup} />
         </Stack.Navigator>
       </NavigationContainer>
     }</ThemeProvider>

@@ -16,10 +16,9 @@ const fonts = {
 const theme = createTheme({
   colors: {
     mainBackground: palette.white,
-    cardPrimaryBackground: palette.purplePrimary,
     buttonPrimaryBackground: palette.black,
     whiteText: palette.white,
-    brightShadow: palette.shadow
+    brightShadow: palette.shadow,
     primaryText: palette.black,
     createButton: palette.black,
     shadow: palette.black,
@@ -50,6 +49,22 @@ const theme = createTheme({
       shadowOffset: { width: 3, height: 3 },
       elevation: 5,
     },
+    search: {
+      backgroundColor: "buttonPrimaryBackground",
+      height: 44,
+      width: 108,
+      alignItems: 'center',
+      justifyContent: 'center',
+      margin: "s",
+    }
+  },
+  textInputVariants: {
+    primary: {
+      flex:1,
+      flexDirection: 'row',
+      alignItems: 'center',
+      justifyContent: 'center',
+    }
   },
   border: {
     s: 8,
