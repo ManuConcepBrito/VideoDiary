@@ -9,6 +9,10 @@ const palette = {
   white: '#FFFFFF',
 };
 
+const fonts = {
+  bold: 'ChakraPetch_700Bold',
+};
+
 const theme = createTheme({
   colors: {
     mainBackground: palette.white,
@@ -32,21 +36,21 @@ const theme = createTheme({
   },
   textVariants: {
     header: {
-      fontFamily: 'ShopifySans-Bold',
+      fontFamily: fonts.bold,
       fontWeight: 'bold',
       fontSize: 34,
       lineHeight: 42.5,
       color: 'primaryText',
     },
     subheader: {
-      fontFamily: 'ShopifySans-SemiBold',
+      fontFamily: fonts.bold,
       fontWeight: '600',
       fontSize: 28,
       lineHeight: 36,
       color: 'primaryText',
     },
     body: {
-      fontFamily: 'ShopifySans',
+      fontFamily: fonts.bold,
       fontSize: 16,
       lineHeight: 24,
       color: 'primaryText',
@@ -75,6 +79,12 @@ const theme = createTheme({
       shadowOffset: {width: 0, height: 5},
       shadowRadius: 15,
       elevation: 5,
+      fontFamily: fonts.bold,
+      fontSize: 40
+    },
+    button: {
+      fontFamily: fonts.bold,
+      fontSize: 20
     }
   }
 });
