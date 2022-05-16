@@ -1,17 +1,16 @@
 import {createTheme} from '@shopify/restyle';
 
 const palette = {
-  purpleLight: '#8C6FF7',
-  purplePrimary: '#5A31F4',
-  purpleDark: '#3F22AB',
+  blue: '#01BAEF',
+  yellow: '#FED90F',
+  red: '#FF1053',
 
-  greenLight: '#56DCBA',
-  greenPrimary: '#0ECD9D',
-  greenDark: '#0A906E',
-
-  black: '#000000',
-  white: '#F0F2F3',
+  black: '#040F16',
+  white: '#FFFFFF',
   shadow: "#81878A"
+};
+const fonts = {
+  bold: 'ChakraPetch_700Bold',
 };
 
 const theme = createTheme({
@@ -21,6 +20,13 @@ const theme = createTheme({
     buttonPrimaryBackground: palette.black,
     whiteText: palette.white,
     brightShadow: palette.shadow
+    primaryText: palette.black,
+    createButton: palette.black,
+    shadow: palette.black,
+    emoji: palette.yellow,
+    primaryCard: palette.blue,
+    secondaryCard: palette.yellow,
+    tertiaryCard: palette.red
   },
   spacing: {
     s: 8,
@@ -53,14 +59,57 @@ const theme = createTheme({
   },
   textVariants: {
     header: {
-      fontFamily: "ChakraPetch_700Bold",
-      fontSize: 40
+      fontFamily: fonts.bold,
+      fontWeight: 'bold',
+      fontSize: 34,
+      lineHeight: 42.5,
+      color: 'primaryText',
+    },
+    subheader: {
+      fontFamily: fonts.bold,
+      fontWeight: '600',
+      fontSize: 28,
+      lineHeight: 36,
+      color: 'primaryText',
+    },
+    body: {
+      fontFamily: fonts.bold,
+      fontSize: 16,
+      lineHeight: 24,
+      color: 'primaryText',
     },
     buttonPrimary: {
       fontFamily: "ChakraPetch_700Bold",
       fontSize: 20,
-      color: "whiteText"
-    }
+      color: "whiteText" 
+  },
+  cardVariants: {
+    defaults: {
+      // We can define defaults for the variant here.
+      // This will be applied after the defaults passed to createVariant and before the variant defined below.
+    },
+    regular: {
+      // We can refer to other values in the theme here, and use responsive props
+      padding: {
+        phone: 's',
+        tablet: 'm',
+      },
+      backgroundColor: 'primaryCard',
+    },
+    elevated: {
+      padding: {
+        phone: 's',
+        tablet: 'm',
+      },
+      shadowColor: 'shadow',
+      shadowOpacity: 0.2,
+      shadowOffset: {width: 0, height: 5},
+      shadowRadius: 15,
+      elevation: 5,
+      fontFamily: fonts.bold,
+      fontSize: 40
+    },
+  },
   }
 });
 
