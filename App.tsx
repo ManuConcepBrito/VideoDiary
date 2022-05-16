@@ -22,7 +22,7 @@ const App = () => {
   return (
     <ThemeProvider theme={theme}>{
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="HelloWorld"
+        <Stack.Navigator initialRouteName="VideoList"
           screenOptions={{
           headerShown: false
           }}
