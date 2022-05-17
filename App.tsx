@@ -9,11 +9,9 @@ import TextInputGroup from "./src/components/atoms/TextInputGroup";
 import RecordButton from "./src/components/atoms/RecordButton";
 import CameraScreen from "./src/components/screens/CameraScreen";
 import DescribeVideo from "./src/components/screens/DescribeVideo";
-import DescribeModal from "./src/components/atoms/DescribeModal";
 import { ThemeProvider } from "@shopify/restyle";
 import theme from "./src/res/theme";
 import { useFonts, ChakraPetch_700Bold } from "@expo-google-fonts/chakra-petch";
-import { Camera } from "expo-camera";
 
 const Stack = createNativeStackNavigator();
 
