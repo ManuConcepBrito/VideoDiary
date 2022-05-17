@@ -1,17 +1,16 @@
 import { createTheme } from '@shopify/restyle';
 
-const palette = {
-  blue: '#01BAEF',
-  yellow: '#FED90F',
-  red: '#FF1053',
+export const palette = {
+  blue: "#01BAEF",
+  yellow: "#FED90F",
+  red: "#FF1053",
 
   black: '#040F16',
   grey: '#81878A',
   white: '#FBFBFF',
 };
-
 const fonts = {
-  bold: 'ChakraPetch_700Bold',
+  bold: "ChakraPetch_700Bold",
 };
 
 const theme = createTheme({
@@ -37,20 +36,69 @@ const theme = createTheme({
     phone: 0,
     tablet: 768,
   },
+  buttonVariants: {
+    defaults: {
+      alignItems: "center",
+      justifyContent: "center",
+      shadowColor: "brightShadow",
+      shadowOpacity: 1,
+      shadowOffset: { width: 3, height: 3 },
+      elevation: 5,
+      flex: 1,
+      height: 50,
+      margin: "s",
+    },
+    primary: {
+      backgroundColor: "buttonPrimaryBackground",
+    },
+    alert: {
+      backgroundColor: "tertiaryCard",
+    },
+    search: {
+      backgroundColor: "buttonPrimaryBackground",
+      height: 44,
+      width: 108,
+      alignItems: "center",
+      justifyContent: "center",
+      margin: "s",
+    },
+  },
+  textInputVariants: {
+    primary: {
+      flex: 1,
+      flexDirection: "row",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+  },
+  border: {
+    s: 8,
+    m: 16,
+    l: 24,
+    xl: 40,
+  },
   textVariants: {
+    mainHeader: {
+      fontFamily: fonts.bold,
+      fontSize: 40,
+      color: "whiteText",
+      textShadowColor: "headerColor",
+      textShadowOffset: { width: 2, height: 2 },
+      textShadowRadius: 2,
+    },
     header: {
       fontFamily: fonts.bold,
-      fontWeight: 'bold',
+      fontWeight: "bold",
       fontSize: 34,
       lineHeight: 42.5,
-      color: 'primaryText',
+      color: "primaryText",
     },
     subheader: {
       fontFamily: fonts.bold,
-      fontWeight: '600',
+      fontWeight: "600",
       fontSize: 28,
       lineHeight: 36,
-      color: 'primaryText',
+      color: "primaryText",
     },
     body: {
       fontFamily: fonts.bold,
