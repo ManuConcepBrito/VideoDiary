@@ -1,9 +1,8 @@
-// In App.js in a new project
-
 import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import VideoList from "./src/components/VideoList";
+import VideoPreview from "./src/components/atoms/VideoPreview";
 import HelloWorld from "./src/components/atoms/HellowWorld";
 import Button from "./src/components/atoms/Button";
 import TextInputGroup from "./src/components/atoms/TextInputGroup";
@@ -12,6 +11,7 @@ import CameraScreen from "./src/components/screens/CameraScreen";
 import { ThemeProvider } from "@shopify/restyle";
 import theme from "./src/res/theme";
 import { useFonts, ChakraPetch_700Bold } from "@expo-google-fonts/chakra-petch";
+import { Camera } from "expo-camera";
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +38,7 @@ const App = () => {
             <Stack.Screen name="Button" component={Button} />
             <Stack.Screen name="TextInput" component={TextInputGroup} />
             <Stack.Screen name="RecordButton" component={RecordButton} />
+            <Stack.Screen name="VideoPreview" component={VideoPreview} />
             <Stack.Screen name="CameraScreen" component={CameraScreen} />
           </Stack.Navigator>
         </NavigationContainer>
