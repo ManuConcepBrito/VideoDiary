@@ -8,6 +8,8 @@ import Button from "./src/components/atoms/Button";
 import TextInputGroup from "./src/components/atoms/TextInputGroup";
 import RecordButton from "./src/components/atoms/RecordButton";
 import CameraScreen from "./src/components/screens/CameraScreen";
+import DescribeVideo from "./src/components/screens/DescribeVideo";
+import DescribeModal from "./src/components/atoms/DescribeModal";
 import { ThemeProvider } from "@shopify/restyle";
 import theme from "./src/res/theme";
 import { useFonts, ChakraPetch_700Bold } from "@expo-google-fonts/chakra-petch";
@@ -28,7 +30,7 @@ const App = () => {
       {
         <NavigationContainer>
           <Stack.Navigator
-            initialRouteName="CameraScreen"
+            initialRouteName="DescribeVideo"
             screenOptions={{
               headerShown: false,
             }}
@@ -40,6 +42,7 @@ const App = () => {
             <Stack.Screen name="RecordButton" component={RecordButton} />
             <Stack.Screen name="VideoPreview" component={VideoPreview} />
             <Stack.Screen name="CameraScreen" component={CameraScreen} />
+            <Stack.Screen name="DescribeVideo" component={DescribeVideo} />
           </Stack.Navigator>
         </NavigationContainer>
       }

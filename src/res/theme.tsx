@@ -39,16 +39,22 @@ const theme = createTheme({
     tablet: 768,
   },
   buttonVariants: {
-    primary: {
-      backgroundColor: "buttonPrimaryBackground",
-      height: 54,
-      width: 245,
+    defaults: {
       alignItems: "center",
       justifyContent: "center",
       shadowColor: "brightShadow",
       shadowOpacity: 1,
       shadowOffset: { width: 3, height: 3 },
       elevation: 5,
+      flex: 1,
+      height: 50,
+      margin: "s",
+    },
+    primary: {
+      backgroundColor: "buttonPrimaryBackground",
+    },
+    alert: {
+      backgroundColor: "tertiaryCard",
     },
     search: {
       backgroundColor: "buttonPrimaryBackground",

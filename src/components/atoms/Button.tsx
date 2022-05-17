@@ -6,7 +6,7 @@ import {
   createVariant,
 } from "@shopify/restyle";
 import { Theme } from "../../res/theme";
-import { Box } from "./Box";
+import Box from "./Box";
 import Text from "./Text";
 
 type Props = VariantProps<Theme, "buttonVariants"> & {
@@ -16,18 +16,17 @@ type Props = VariantProps<Theme, "buttonVariants"> & {
 };
 
 const ButtonContainer = createRestyleComponent<
-  VariantProps<Theme, "buttonVariants"> & React.ComponentProps<typeof Box>,
+  VariantProps<Theme, "buttonVariants"> &
+    React.ComponentProps<typeof TouchableOpacity>,
   Theme
->([createVariant({ themeKey: "buttonVariants" })], Box);
+>([createVariant({ themeKey: "buttonVariants" })], TouchableOpacity);
 
 const Button = ({ label, onPress, variant }: Props) => {
   return (
-    <ButtonContainer variant={variant}>
-      <TouchableOpacity onPress={onPress}>
-        <Box>
-          <Text variant="buttonPrimary">{label}</Text>
-        </Box>
-      </TouchableOpacity>
+    <ButtonContainer variant={variant} onPress={onPress}>
+      <Box>
+        <Text variant="buttonPrimary">{label}</Text>
+      </Box>
     </ButtonContainer>
   );
 };
