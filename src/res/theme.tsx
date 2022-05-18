@@ -17,6 +17,7 @@ export const SPACING = {
   m: 16,
   l: 24,
   xl: 40,
+  xxl: 70,
 };
 
 // const theme = createTheme({

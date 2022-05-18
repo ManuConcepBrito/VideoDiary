@@ -1,6 +1,7 @@
 import React from 'react';
 import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
 import { COLORS, FONTS, SPACING } from '../res/theme';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import Button from './Button';
 
 const numColumns = 3;
@@ -25,7 +26,8 @@ const data = [
 
 const styles = StyleSheet.create({
   container: {
-    flex: 3,
+    flex: 1,
+    flexGrow: 1,
     backgroundColor: COLORS.white,
     paddingTop: SPACING.xl,
     paddingBottom: SPACING.m,
@@ -72,6 +74,15 @@ const styles = StyleSheet.create({
   cardYellow: {
     backgroundColor: COLORS.yellow,
   },
+  textInput: {
+    fontFamily: FONTS.bold,
+    fontSize: 20,
+    textAlign: 'center',
+    borderColor: COLORS.black,
+    borderWidth: 3,
+    backgroundColor: '#fff',
+    paddingVertical: SPACING.s,
+  },
 });
 
 const cardStyleMap: any = {
@@ -86,36 +97,27 @@ function renderHeader() {
       style={{
         paddingHorizontal: SPACING.xxs,
         paddingBottom: SPACING.xxs,
-        flexDirection: 'row',
       }}
     >
       <View
         style={{
-          flex: 2,
-          marginRight: SPACING.xxs,
+          position: 'absolute',
+          zIndex: 1,
+          paddingTop: SPACING.m + 2,
+          paddingLeft: SPACING.m + 3,
         }}
       >
-        <TextInput
-          autoCapitalize="none"
-          autoCorrect={false}
-          clearButtonMode="always"
-          value={''}
-          onChangeText={(queryText) => handleSearch(queryText)}
-          style={{
-            borderColor: COLORS.black,
-            borderWidth: 3,
-            backgroundColor: '#fff',
-            paddingVertical: SPACING.s,
-          }}
-        />
+        <Icon color={COLORS.grey} name="search" size={20}></Icon>
       </View>
-      <View
-        style={{
-          flex: 1,
-        }}
-      >
-        <Button title="Search"></Button>
-      </View>
+      <TextInput
+        autoCapitalize="none"
+        autoCorrect={false}
+        clearButtonMode="always"
+        value={''}
+        placeholder="Tags, Days, Dates..."
+        onChangeText={(queryText) => handleSearch(queryText)}
+        style={styles.textInput}
+      />
     </View>
   );
 }
@@ -135,15 +137,11 @@ const VideoList = () => {
         )}
         keyExtractor={(item) => item.id}
         numColumns={numColumns}
+        stickyHeaderIndices={[0]}
       />
-      <View
-        style={{
-          backgroundColor: 'red',
-          marginTop: SPACING.m,
-          marginBottom: SPACING.xxs,
-          paddingVertical: SPACING.xl,
-        }}
-      ></View>
+      <View style={{ paddingTop: SPACING.m }}>
+        <Button title="Create Entry"></Button>
+      </View>
     </View>
   );
 };
