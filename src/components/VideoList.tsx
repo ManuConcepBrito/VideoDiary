@@ -1,23 +1,7 @@
-import {
-  createBox,
-  createText,
-  createRestyleComponent,
-  createVariant,
-  VariantProps,
-} from '@shopify/restyle';
 import React from 'react';
-import { Dimensions, FlatList } from 'react-native';
-import { Theme } from '../res/theme';
-
-// See the "Defining Your Theme" readme section below
-
-const Box = createBox<Theme>();
-const Text = createText<Theme>();
-
-const Card = createRestyleComponent<
-  VariantProps<Theme, 'cardVariants'> & React.ComponentProps<typeof Box>,
-  Theme
->([createVariant({ themeKey: 'cardVariants' })], Box);
+import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
+import { COLORS, FONTS, SPACING } from '../res/theme';
+import Button from './Button';
 
 const numColumns = 3;
 const data = [
@@ -38,39 +22,129 @@ const data = [
   { id: '14', day: 'Sat', date: '30 May' },
   { id: '15', day: 'Sat', date: '30 May' },
 ];
-const cardStyleMap = {
-  '0': 'primary',
-  '1': 'secondary',
-  '2': 'tertiary',
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 3,
+    backgroundColor: COLORS.white,
+    paddingTop: SPACING.xl,
+    paddingBottom: SPACING.m,
+    paddingHorizontal: SPACING.xxs,
+  },
+  header: {
+    fontFamily: FONTS.bold,
+    color: COLORS.black,
+    fontSize: 40,
+    lineHeight: 42.5,
+    textAlign: 'center',
+    paddingBottom: SPACING.m,
+  },
+  body: {
+    fontFamily: FONTS.bold,
+    color: COLORS.white,
+    fontSize: 20,
+    lineHeight: 32,
+    textShadowColor: 'black',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
+  },
+  card: {
+    paddingLeft: SPACING.m,
+    margin: SPACING.xxs,
+    flex: 1,
+    backgroundColor: COLORS.black,
+    borderColor: COLORS.black,
+    borderWidth: 3,
+    shadowColor: COLORS.grey,
+    shadowOpacity: 1,
+    shadowOffset: { width: 3, height: 3 },
+    elevation: 5,
+    aspectRatio: 1,
+    justifyContent: 'center',
+    maxWidth: '31%',
+  },
+  cardBlue: {
+    backgroundColor: COLORS.blue,
+  },
+  cardRed: {
+    backgroundColor: COLORS.red,
+  },
+  cardYellow: {
+    backgroundColor: COLORS.yellow,
+  },
+});
+
+const cardStyleMap: any = {
+  '0': styles.cardBlue,
+  '1': styles.cardYellow,
+  '2': styles.cardRed,
 };
+
+function renderHeader() {
+  return (
+    <View
+      style={{
+        paddingHorizontal: SPACING.xxs,
+        paddingBottom: SPACING.xxs,
+        flexDirection: 'row',
+      }}
+    >
+      <View
+        style={{
+          flex: 2,
+          marginRight: SPACING.xxs,
+        }}
+      >
+        <TextInput
+          autoCapitalize="none"
+          autoCorrect={false}
+          clearButtonMode="always"
+          value={''}
+          onChangeText={(queryText) => handleSearch(queryText)}
+          style={{
+            borderColor: COLORS.black,
+            borderWidth: 3,
+            backgroundColor: '#fff',
+            paddingVertical: SPACING.s,
+          }}
+        />
+      </View>
+      <View
+        style={{
+          flex: 1,
+        }}
+      >
+        <Button title="Search"></Button>
+      </View>
+    </View>
+  );
+}
 
 const VideoList = () => {
   return (
-    <Box
-      flex={3}
-      backgroundColor="mainBackground"
-      paddingVertical="m"
-      paddingHorizontal="s"
-    >
-      <Box backgroundColor="emoji" marginBottom="l" paddingVertical="xl"></Box>
+    <View style={styles.container}>
+      <Text style={styles.header}>Your Video Diary</Text>
       <FlatList
         data={data}
+        ListHeaderComponent={renderHeader}
         renderItem={({ item }) => (
-          <Card variant={cardStyleMap[item.id % 3]}>
-            <Text variant="body">{item.day}</Text>
-            <Text variant="body">{item.date}</Text>
-          </Card>
+          <View style={[styles.card, cardStyleMap[item.id % numColumns]]}>
+            <Text style={styles.body}>{item.day}</Text>
+            <Text style={styles.body}>{item.date}</Text>
+          </View>
         )}
         keyExtractor={(item) => item.id}
         numColumns={numColumns}
       />
-      <Box
-        backgroundColor="tertiaryCard"
-        marginTop="m"
-        marginBottom="xs"
-        paddingVertical="xl"
-      ></Box>
-    </Box>
+      <View
+        style={{
+          backgroundColor: 'red',
+          marginTop: SPACING.m,
+          marginBottom: SPACING.xxs,
+          paddingVertical: SPACING.xl,
+        }}
+      ></View>
+    </View>
   );
 };
 
