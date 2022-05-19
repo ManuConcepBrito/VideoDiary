@@ -1,19 +1,8 @@
-import * as React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import VideoList from "./src/components/VideoList";
-import VideoPreview from "./src/components/atoms/VideoPreview";
-import HelloWorld from "./src/components/atoms/HellowWorld";
-import Button from "./src/components/atoms/Button";
-import TextInputGroup from "./src/components/atoms/TextInputGroup";
-import RecordButton from "./src/components/atoms/RecordButton";
-import CameraScreen from "./src/components/screens/CameraScreen";
-import DescribeVideo from "./src/components/screens/DescribeVideo";
-import DescribeModal from "./src/components/atoms/DescribeModal";
-import { ThemeProvider } from "@shopify/restyle";
-import theme from "./src/res/theme";
-import { useFonts, ChakraPetch_700Bold } from "@expo-google-fonts/chakra-petch";
-import { Camera } from "expo-camera";
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import VideoList from './src/components/VideoList';
+import { useFonts, ChakraPetch_700Bold } from '@expo-google-fonts/chakra-petch';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,27 +15,16 @@ const App = () => {
     return null;
   }
   return (
-    <ThemeProvider theme={theme}>
-      {
-        <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName="DescribeVideo"
-            screenOptions={{
-              headerShown: false,
-            }}
-          >
-            <Stack.Screen name="VideoList" component={VideoList} />
-            <Stack.Screen name="HelloWorld" component={HelloWorld} />
-            <Stack.Screen name="Button" component={Button} />
-            <Stack.Screen name="TextInput" component={TextInputGroup} />
-            <Stack.Screen name="RecordButton" component={RecordButton} />
-            <Stack.Screen name="VideoPreview" component={VideoPreview} />
-            <Stack.Screen name="CameraScreen" component={CameraScreen} />
-            <Stack.Screen name="DescribeVideo" component={DescribeVideo} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      }
-    </ThemeProvider>
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="VideoList"
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        <Stack.Screen name="VideoList" component={VideoList} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 };
 
