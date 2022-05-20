@@ -5,7 +5,14 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Button from './Button';
 
 const numColumns = 3;
-const mock = [
+
+interface Entry {
+  id: string;
+  day: string;
+  date: string;
+}
+
+const mock: Entry[] = [
   { id: '0', day: 'Sat', date: '30 May' },
   { id: '1', day: 'Sat', date: '30 May' },
   { id: '2', day: 'Sat', date: '30 May' },
@@ -93,10 +100,10 @@ const cardStyleMap: any = {
 
 const VideoList = () => {
   const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Entry[]>([]);
   const [error, setError] = useState(null);
   const [query, setQuery] = useState('');
-  const [fullData, setFullData] = useState([]);
+  const [fullData, setFullData] = useState<Entry[]>([]);
 
   // TODO: API Call
   useEffect(() => {
@@ -104,7 +111,7 @@ const VideoList = () => {
     setFullData(mock);
   }, []);
 
-  const handleSearch = (text) => {
+  const handleSearch = (text: string) => {
     const formattedQuery = text.toLowerCase();
     const filteredData = fullData.filter((entry) => {
       console.log(entry);
@@ -114,7 +121,7 @@ const VideoList = () => {
     setQuery(text);
   };
 
-  const contains = ({ day, date }, query) => {
+  const contains = ({ day, date }: Entry, query: string) => {
     if (
       day.toLowerCase().includes(query) ||
       date.toLowerCase().includes(query)
@@ -156,6 +163,10 @@ const VideoList = () => {
     );
   };
 
+  const onPress = () => {
+    alert('onPress');
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Your Video Diary</Text>
@@ -163,7 +174,9 @@ const VideoList = () => {
         data={data}
         ListHeaderComponent={renderHeader}
         renderItem={({ item }) => (
-          <View style={[styles.card, cardStyleMap[item.id % numColumns]]}>
+          <View
+            style={[styles.card, cardStyleMap[Number(item.id) % numColumns]]}
+          >
             <Text style={styles.body}>{item.day}</Text>
             <Text style={styles.body}>{item.date}</Text>
           </View>
@@ -173,7 +186,11 @@ const VideoList = () => {
         stickyHeaderIndices={[0]}
       />
       <View style={{ paddingTop: SPACING.m }}>
-        <Button title="Create Entry"></Button>
+        <Button
+          title="Create Entry"
+          onPress={onPress}
+          backgroundColor={''}
+        ></Button>
       </View>
     </View>
   );
