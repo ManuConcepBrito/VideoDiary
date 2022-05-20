@@ -35,7 +35,7 @@ const DescribeModal = () => {
       </View>
       <Text style={styles.body}>{STRINGS.giveItATag}</Text>
       <View style={styles.textInputContainer}>
-        <TextInput style={styles.input} />
+        <TextInput style={styles.input} placeholder="Keywords about today..." />
         <TouchableOpacity
           style={styles.button}
           onPress={() => alert('You want to add a tag')}
@@ -45,7 +45,10 @@ const DescribeModal = () => {
       </View>
       <Text style={styles.body}>{STRINGS.notes}</Text>
       <View style={styles.notesContainer}>
-        <TextInput style={styles.input} />
+        <TextInput
+          style={styles.input}
+          placeholder="Additional thoughts on today..."
+        />
       </View>
       <View style={styles.finishButtonContainer}>
         <Button
@@ -109,6 +112,9 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: COLORS.black,
     paddingVertical: SPACING.xs,
+    fontFamily: FONTS.bold,
+    fontSize: 20,
+    textAlign: 'center',
   },
   notesContainer: {
     marginBottom: SPACING.s,

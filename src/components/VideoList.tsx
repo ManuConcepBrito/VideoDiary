@@ -31,73 +31,6 @@ const mock: Entry[] = [
   { id: '15', day: 'Sat', date: '30 May' },
 ];
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexGrow: 1,
-    backgroundColor: COLORS.white,
-    paddingTop: SPACING.xl,
-    paddingBottom: SPACING.m,
-    paddingHorizontal: SPACING.xxs,
-  },
-  header: {
-    fontFamily: FONTS.bold,
-    color: COLORS.black,
-    fontSize: 40,
-    lineHeight: 42.5,
-    textAlign: 'center',
-    paddingBottom: SPACING.m,
-  },
-  body: {
-    fontFamily: FONTS.bold,
-    color: COLORS.white,
-    fontSize: 20,
-    lineHeight: 32,
-    textShadowColor: 'black',
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 1,
-  },
-  card: {
-    paddingLeft: SPACING.m,
-    margin: SPACING.xxs,
-    flex: 1,
-    backgroundColor: COLORS.black,
-    borderColor: COLORS.black,
-    borderWidth: 3,
-    shadowColor: COLORS.grey,
-    shadowOpacity: 1,
-    shadowOffset: { width: 3, height: 3 },
-    elevation: 5,
-    aspectRatio: 1,
-    justifyContent: 'center',
-    maxWidth: '31%',
-  },
-  cardBlue: {
-    backgroundColor: COLORS.blue,
-  },
-  cardRed: {
-    backgroundColor: COLORS.red,
-  },
-  cardYellow: {
-    backgroundColor: COLORS.yellow,
-  },
-  textInput: {
-    fontFamily: FONTS.bold,
-    fontSize: 20,
-    textAlign: 'center',
-    borderColor: COLORS.black,
-    borderWidth: 3,
-    backgroundColor: '#fff',
-    paddingVertical: SPACING.s,
-  },
-});
-
-const cardStyleMap: any = {
-  '0': styles.cardBlue,
-  '1': styles.cardYellow,
-  '2': styles.cardRed,
-};
-
 const VideoList = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<Entry[]>([]);
@@ -150,15 +83,17 @@ const VideoList = () => {
         >
           <Icon color={COLORS.grey} name="search" size={20}></Icon>
         </View>
-        <TextInput
-          autoCapitalize="none"
-          autoCorrect={false}
-          clearButtonMode="always"
-          value={query}
-          placeholder="Tags, Days, Dates..."
-          onChangeText={(queryText) => handleSearch(queryText)}
-          style={styles.textInput}
-        />
+        <View style={styles.searchBar}>
+          <TextInput
+            autoCapitalize="none"
+            autoCorrect={false}
+            clearButtonMode="always"
+            value={query}
+            placeholder="Tags, Days, Dates..."
+            onChangeText={(queryText) => handleSearch(queryText)}
+            style={styles.textInput}
+          />
+        </View>
       </View>
     );
   };
@@ -184,16 +119,92 @@ const VideoList = () => {
         keyExtractor={(item) => item.id}
         numColumns={numColumns}
         stickyHeaderIndices={[0]}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
       />
       <View style={{ paddingTop: SPACING.m }}>
         <Button
           title="Create Entry"
           onPress={onPress}
-          backgroundColor={''}
+          backgroundColor={COLORS.black}
         ></Button>
       </View>
     </View>
   );
 };
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexGrow: 1,
+    backgroundColor: COLORS.white,
+    paddingTop: SPACING.xl,
+    paddingBottom: SPACING.m,
+    paddingHorizontal: SPACING.xxs,
+  },
+  header: {
+    fontFamily: FONTS.bold,
+    color: COLORS.black,
+    fontSize: 40,
+    lineHeight: 42.5,
+    textAlign: 'center',
+    paddingBottom: SPACING.m,
+  },
+  body: {
+    fontFamily: FONTS.bold,
+    color: COLORS.white,
+    fontSize: 20,
+    lineHeight: 32,
+    textShadowColor: 'black',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 1,
+  },
+  card: {
+    paddingLeft: SPACING.m,
+    margin: SPACING.xxs,
+    flex: 1,
+    backgroundColor: COLORS.black,
+    borderColor: COLORS.black,
+    borderWidth: 3,
+    shadowColor: COLORS.grey,
+    shadowOpacity: 1,
+    shadowOffset: { width: 3, height: 3 },
+    shadowRadius: 0,
+    elevation: 5,
+    aspectRatio: 1,
+    justifyContent: 'center',
+    maxWidth: '31%',
+  },
+  cardBlue: {
+    backgroundColor: COLORS.blue,
+  },
+  cardRed: {
+    backgroundColor: COLORS.red,
+  },
+  cardYellow: {
+    backgroundColor: COLORS.yellow,
+  },
+  textInput: {
+    fontFamily: FONTS.bold,
+    fontSize: 20,
+    textAlign: 'center',
+    borderColor: COLORS.black,
+    borderWidth: 3,
+    backgroundColor: COLORS.white,
+    paddingVertical: SPACING.s,
+  },
+  searchBar: {
+    shadowColor: COLORS.grey,
+    shadowOpacity: 1,
+    shadowOffset: { width: 3, height: 3 },
+    shadowRadius: 0,
+    elevation: 5,
+  },
+});
+
+const cardStyleMap: any = {
+  '0': styles.cardBlue,
+  '1': styles.cardYellow,
+  '2': styles.cardRed,
+};
 export default VideoList;
