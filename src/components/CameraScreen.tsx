@@ -8,14 +8,15 @@ import {
   View,
   Text,
 } from 'react-native';
-import { useIsFocused } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { Camera } from 'expo-camera';
 import { COLORS, FONTS } from '../res/theme';
 import { ICONS } from '../res/icons';
 
 // functional componenent using expo camera
-export default function CameraScreen({ navigation }) {
+export default function CameraScreen() {
   const cameraRef = React.useRef(null);
+  const navigation = useNavigation();
   const [videoUri, setVideoUri] = React.useState(null);
   // track recording button state
   const [recording, setRecording] = React.useState(false);
@@ -29,7 +30,7 @@ export default function CameraScreen({ navigation }) {
   React.useEffect(() => {
     if (videoUri !== null) {
       console.log(videoUri);
-      navigation.navigate('VideoPreview', { uri: videoUri });
+      navigation.navigate('DescribeVideo', { uri: videoUri });
     }
   }, [videoUri]);
 

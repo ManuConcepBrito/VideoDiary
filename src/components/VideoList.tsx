@@ -1,8 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, Text, TextInput, View } from 'react-native';
+import {
+  FlatList,
+  Keyboard,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from 'react-native';
 import { COLORS, FONTS, SPACING } from '../res/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Button from './Button';
+import { useNavigation } from '@react-navigation/native';
 
 const numColumns = 3;
 
@@ -32,6 +40,7 @@ const mock: Entry[] = [
 ];
 
 const VideoList = () => {
+  const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<Entry[]>([]);
   const [error, setError] = useState(null);
@@ -47,7 +56,6 @@ const VideoList = () => {
   const handleSearch = (text: string) => {
     const formattedQuery = text.toLowerCase();
     const filteredData = fullData.filter((entry) => {
-      console.log(entry);
       return contains(entry, formattedQuery);
     });
     setData(filteredData);
@@ -87,10 +95,12 @@ const VideoList = () => {
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
+            autoFocus={true}
+            onEndEditing={() => Keyboard.dismiss()}
             clearButtonMode="always"
             value={query}
             placeholder="Tags, Days, Dates..."
-            onChangeText={(queryText) => handleSearch(queryText)}
+            onChangeText={(query) => handleSearch(query)}
             style={styles.textInput}
           />
         </View>
@@ -121,11 +131,12 @@ const VideoList = () => {
         stickyHeaderIndices={[0]}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
+        onScrollBeginDrag={() => Keyboard.dismiss()}
       />
       <View style={{ paddingTop: SPACING.m }}>
         <Button
           title="Create Entry"
-          onPress={onPress}
+          onPress={() => navigation.navigate('CameraScreen')}
           backgroundColor={COLORS.black}
         ></Button>
       </View>
@@ -138,7 +149,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexGrow: 1,
     backgroundColor: COLORS.white,
-    paddingTop: SPACING.xl,
+    paddingTop: SPACING.xxl,
     paddingBottom: SPACING.m,
     paddingHorizontal: SPACING.xxs,
   },
@@ -148,7 +159,7 @@ const styles = StyleSheet.create({
     fontSize: 40,
     lineHeight: 42.5,
     textAlign: 'center',
-    paddingBottom: SPACING.m,
+    paddingBottom: SPACING.s,
   },
   body: {
     fontFamily: FONTS.bold,

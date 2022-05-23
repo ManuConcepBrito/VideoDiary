@@ -4,13 +4,13 @@ import { SPACING } from '../res/theme';
 import DescribeModal from './DescribeModal';
 import VideoPreview from './VideoPreview';
 
-export default function DescribeVideo({ navigation, route }) {
+export default function DescribeVideo({ route }) {
   // return with a container and VideoPreview inside
   return (
     <View style={styles.outerContainer}>
       <View style={styles.videoPreview}>
         {/* route.param.uri */}
-        <VideoPreview uri="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" />
+        <VideoPreview uri={route.params.uri} />
       </View>
       <View style={styles.describeModal}>
         {/* route.param.uri */}

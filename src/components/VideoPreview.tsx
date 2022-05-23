@@ -10,7 +10,7 @@ const VIDEO_HEIGHT = 300;
 const VIDEO_WIDTH = VIDEO_HEIGHT;
 const MARGIN_TOP = VIDEO_HEIGHT * 0.2;
 
-export default function VideoPreview({ uri }: { uri: string }) {
+export default function VideoPreview({ uri }) {
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
   return (
@@ -18,11 +18,9 @@ export default function VideoPreview({ uri }: { uri: string }) {
       <View style={styles.videoContainer}>
         <VideoPlayer
           videoProps={{
-            shouldPlay: true,
+            shouldPlay: false,
             resizeMode: Video.RESIZE_MODE_CONTAIN,
-            source: {
-              uri: uri,
-            },
+            source: { uri },
           }}
           icon={{
             play: <Image source={ICONS.playButton} />,

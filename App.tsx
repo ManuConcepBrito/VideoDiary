@@ -22,7 +22,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="DescribeVideo"
+        initialRouteName="VideoList"
         screenOptions={{
           headerShown: false,
         }}

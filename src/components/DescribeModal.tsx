@@ -1,3 +1,4 @@
+import { useNavigation } from '@react-navigation/native';
 import * as React from 'react';
 import {
   View,
@@ -12,12 +13,15 @@ import { STRINGS } from '../res/strings';
 import { COLORS, FONTS, SPACING } from '../res/theme';
 import Button from './Button';
 
+const uploadVideo = (navigation) => {
+  // TODO
+  console.log('Uploading the video.');
+  navigation.navigate('VideoList');
+};
+
 const DescribeModal = () => {
   // return with a container and VideoPreview inside
-  // dummy onPress
-  const onPress = () => {
-    alert('onPress');
-  };
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
@@ -54,12 +58,12 @@ const DescribeModal = () => {
         <Button
           backgroundColor={COLORS.red}
           title="Cancel"
-          onPress={onPress}
+          onPress={() => navigation.goBack()}
         ></Button>
         <Button
           backgroundColor={COLORS.black}
           title="Finish"
-          onPress={onPress}
+          onPress={() => uploadVideo(navigation)}
         ></Button>
       </View>
     </View>
