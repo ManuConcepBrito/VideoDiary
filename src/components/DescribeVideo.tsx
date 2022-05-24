@@ -1,10 +1,13 @@
+import { RouteProp, useRoute } from '@react-navigation/native';
 import * as React from 'react';
 import { View, StyleSheet } from 'react-native';
+import { StackParamList } from '../../App';
 import { SPACING } from '../res/theme';
 import DescribeModal from './DescribeModal';
 import VideoPreview from './VideoPreview';
 
-export default function DescribeVideo({ route }) {
+const DescribeVideo = () => {
+  const route = useRoute<RouteProp<StackParamList, 'DescribeVideo'>>();
   // return with a container and VideoPreview inside
   return (
     <View style={styles.outerContainer}>
@@ -14,11 +17,11 @@ export default function DescribeVideo({ route }) {
       </View>
       <View style={styles.describeModal}>
         {/* route.param.uri */}
-        <DescribeModal />
+        <DescribeModal uri={route.params.uri} />
       </View>
     </View>
   );
-}
+};
 // stylesheet for container
 const styles = StyleSheet.create({
   outerContainer: {
@@ -32,3 +35,5 @@ const styles = StyleSheet.create({
     flex: 3,
   },
 });
+
+export default DescribeVideo;

@@ -1,4 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { observer } from 'mobx-react-lite';
 import * as React from 'react';
 import {
   View,
@@ -7,51 +9,90 @@ import {
   TouchableOpacity,
   TextInput,
   Text,
+  Keyboard,
 } from 'react-native';
+import { StackParamList } from '../../App';
 import { ICONS } from '../res/icons';
 import { STRINGS } from '../res/strings';
 import { COLORS, FONTS, SPACING } from '../res/theme';
+import { DiaryStore, Entry, Mood, useDiaryStore } from '../store/DiaryStore';
 import Button from './Button';
 
-const uploadVideo = (navigation) => {
-  // TODO
-  console.log('Uploading the video.');
-  navigation.navigate('VideoList');
+type DescribeModalProps = NativeStackNavigationProp<
+  StackParamList,
+  'DescribeVideo'
+>;
+type DescribeVideoProps = {
+  uri: string;
 };
 
-const DescribeModal = () => {
+const DescribeModal = ({ uri }: DescribeVideoProps) => {
   // return with a container and VideoPreview inside
-  const navigation = useNavigation();
+  const navigation = useNavigation<DescribeModalProps>();
+  const store = useDiaryStore();
+  const [tags, setTags] = React.useState<string[]>([]);
+  const [tagInput, setTagInput] = React.useState<string>('');
+  const [note, setNote] = React.useState<string>('');
+  const [mood, setMood] = React.useState<Mood>();
+
+  const updateTag = (input: string) => {
+    const formattedTag = input.toLowerCase();
+    setTagInput(formattedTag);
+  };
+
+  const saveTag = () => {
+    setTags((tags) => [...tags, tagInput]);
+    setTagInput('');
+  };
+
+  const addVideo = (store: DiaryStore, uri: string) => {
+    const entry: Entry = { date: new Date(), mood, note, tags, videoURI: uri };
+    store.addEntry(entry);
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.body}>{STRINGS.whatWasYourMoodToday}</Text>
       <View style={styles.emojiContainer}>
-        <TouchableOpacity onPress={() => alert('You feel happy')}>
-          <Image style={styles.emoji} source={ICONS.happyIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => alert('You feel neutral')}>
+        <TouchableOpacity onPress={() => setMood(Mood.NEUTRAL)}>
           <Image style={styles.emoji} source={ICONS.neutralIcon} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => alert('You feel sad')}>
+        <TouchableOpacity onPress={() => setMood(Mood.SAD)}>
           <Image style={styles.emoji} source={ICONS.sadIcon} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => setMood(Mood.HAPPY)}>
+          <Image style={styles.emoji} source={ICONS.happyIcon} />
         </TouchableOpacity>
       </View>
       <Text style={styles.body}>{STRINGS.giveItATag}</Text>
       <View style={styles.textInputContainer}>
-        <TextInput style={styles.input} placeholder="Keywords about today..." />
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => alert('You want to add a tag')}
-        >
+        <TextInput
+          value={tagInput}
+          style={styles.input}
+          placeholder="Keywords about today..."
+          autoCapitalize="none"
+          autoCorrect={false}
+          onEndEditing={() => Keyboard.dismiss()}
+          onChangeText={(input) => updateTag(input)}
+          onSubmitEditing={() => saveTag()}
+          clearButtonMode="always"
+        />
+        <TouchableOpacity style={styles.button} onPress={() => saveTag()}>
           <Image style={styles.arrow} source={ICONS.arrow} />
         </TouchableOpacity>
       </View>
       <Text style={styles.body}>{STRINGS.notes}</Text>
       <View style={styles.notesContainer}>
         <TextInput
+          value={note}
+          placeholder="Keywords about today..."
+          autoCapitalize="none"
+          autoCorrect={false}
+          onEndEditing={() => Keyboard.dismiss()}
+          onChangeText={(input) => setNote(input)}
+          onSubmitEditing={() => saveTag()}
+          clearButtonMode="always"
           style={styles.input}
-          placeholder="Additional thoughts on today..."
         />
       </View>
       <View style={styles.finishButtonContainer}>
@@ -63,12 +104,16 @@ const DescribeModal = () => {
         <Button
           backgroundColor={COLORS.black}
           title="Finish"
-          onPress={() => uploadVideo(navigation)}
+          onPress={() => {
+            addVideo(store, uri);
+            navigation.navigate('VideoList');
+          }}
         ></Button>
       </View>
     </View>
   );
 };
+
 // stylesheet for container
 const styles = StyleSheet.create({
   container: {
@@ -152,4 +197,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DescribeModal;
+export default observer(DescribeModal);

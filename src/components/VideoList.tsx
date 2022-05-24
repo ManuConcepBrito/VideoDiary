@@ -5,76 +5,34 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  TouchableOpacity,
   View,
 } from 'react-native';
 import { COLORS, FONTS, SPACING } from '../res/theme';
+import { DiaryStore, Entry, useDiaryStore } from '../store/DiaryStore';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Button from './Button';
 import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { StackParamList } from '../../App';
+import { observer } from 'mobx-react-lite';
 
 const numColumns = 3;
 
-interface Entry {
-  id: string;
-  day: string;
-  date: string;
-}
-
-const mock: Entry[] = [
-  { id: '0', day: 'Sat', date: '30 May' },
-  { id: '1', day: 'Sat', date: '30 May' },
-  { id: '2', day: 'Sat', date: '30 May' },
-  { id: '3', day: 'Sat', date: '30 May' },
-  { id: '4', day: 'Sat', date: '30 May' },
-  { id: '5', day: 'Sat', date: '30 May' },
-  { id: '6', day: 'Mon', date: '30 May' },
-  { id: '7', day: 'Sat', date: '30 May' },
-  { id: '8', day: 'Sat', date: '30 May' },
-  { id: '9', day: 'Sat', date: '30 May' },
-  { id: '10', day: 'Sat', date: '30 May' },
-  { id: '11', day: 'Sat', date: '15 May' },
-  { id: '12', day: 'Sat', date: '30 June' },
-  { id: '13', day: 'Sat', date: '30 May' },
-  { id: '14', day: 'Sat', date: '30 May' },
-  { id: '15', day: 'Sat', date: '30 May' },
-];
+type VideoListProps = NativeStackNavigationProp<StackParamList, 'VideoList'>;
 
 const VideoList = () => {
-  const navigation = useNavigation();
-  const [isLoading, setIsLoading] = useState(false);
-  const [data, setData] = useState<Entry[]>([]);
-  const [error, setError] = useState(null);
+  const navigation = useNavigation<VideoListProps>();
   const [query, setQuery] = useState('');
-  const [fullData, setFullData] = useState<Entry[]>([]);
+  const store = useDiaryStore();
 
-  // TODO: API Call
-  useEffect(() => {
-    setData(mock);
-    setFullData(mock);
-  }, []);
-
-  const handleSearch = (text: string) => {
-    const formattedQuery = text.toLowerCase();
-    const filteredData = fullData.filter((entry) => {
-      return contains(entry, formattedQuery);
-    });
-    setData(filteredData);
-    setQuery(text);
+  const updateFilter = (filter: string) => {
+    setQuery(filter);
   };
 
-  const contains = ({ day, date }: Entry, query: string) => {
-    if (
-      day.toLowerCase().includes(query) ||
-      date.toLowerCase().includes(query)
-    ) {
-      return true;
-    }
-
-    return false;
-  };
-
-  const renderHeader = () => {
-    return (
+  return (
+    <View style={styles.container}>
+      <Text style={styles.header}>Your Video Diary</Text>
       <View
         style={{
           paddingHorizontal: SPACING.xxs,
@@ -89,44 +47,45 @@ const VideoList = () => {
             paddingLeft: SPACING.m + 3,
           }}
         >
-          <Icon color={COLORS.grey} name="search" size={20}></Icon>
+          <Icon color={COLORS.grey} name="search" size={20} />
         </View>
         <View style={styles.searchBar}>
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
-            autoFocus={true}
             onEndEditing={() => Keyboard.dismiss()}
             clearButtonMode="always"
             value={query}
             placeholder="Tags, Days, Dates..."
-            onChangeText={(query) => handleSearch(query)}
+            onSubmitEditing={() => {
+              store.changeFilter(query);
+            }}
+            onChangeText={(input) => {
+              updateFilter(input);
+            }}
             style={styles.textInput}
           />
         </View>
       </View>
-    );
-  };
-
-  const onPress = () => {
-    alert('onPress');
-  };
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Your Video Diary</Text>
       <FlatList
-        data={data}
-        ListHeaderComponent={renderHeader}
+        data={store.filtered}
         renderItem={({ item }) => (
-          <View
-            style={[styles.card, cardStyleMap[Number(item.id) % numColumns]]}
+          <TouchableOpacity
+            onPress={() => console.log(item)}
+            style={[
+              styles.card,
+              cardStyleMap[Number(item.date.getMilliseconds()) % numColumns],
+            ]}
           >
-            <Text style={styles.body}>{item.day}</Text>
-            <Text style={styles.body}>{item.date}</Text>
-          </View>
+            <Text style={styles.body}>
+              {item.date.toLocaleString('default', { weekday: 'short' })}
+            </Text>
+            <Text style={styles.body}>
+              {item.date.toLocaleString('default', { month: 'short' })}{' '}
+              {item.date.getDate()}
+            </Text>
+          </TouchableOpacity>
         )}
-        keyExtractor={(item) => item.id}
         numColumns={numColumns}
         stickyHeaderIndices={[0]}
         showsVerticalScrollIndicator={false}
@@ -218,4 +177,4 @@ const cardStyleMap: any = {
   '1': styles.cardYellow,
   '2': styles.cardRed,
 };
-export default VideoList;
+export default observer(VideoList);
