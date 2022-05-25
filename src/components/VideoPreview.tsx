@@ -1,18 +1,14 @@
 import * as React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
-import { ResizeMode, Video } from 'expo-av';
+import { View } from 'react-native';
+import { ResizeMode } from 'expo-av';
 import VideoPlayer from 'expo-video-player';
-import icons, { ICONS } from '../res/icons';
-import { COLORS, SPACING } from '../res/theme';
 
-const VIDEO_HEIGHT = 300;
-// const VIDEO_WIDTH = VIDEO_HEIGHT * (9 / 16);
-const VIDEO_WIDTH = VIDEO_HEIGHT;
-const MARGIN_TOP = VIDEO_HEIGHT * 0.2;
+type VideoPreviewProps = {
+  uri: string;
+  style?: any;
+};
 
-export default function VideoPreview({ uri }) {
-  const video = React.useRef(null);
-  const [status, setStatus] = React.useState({});
+export default function VideoPreview({ uri, style }: VideoPreviewProps) {
   return (
     <View>
       <View>
@@ -22,10 +18,7 @@ export default function VideoPreview({ uri }) {
             resizeMode: ResizeMode.COVER,
             source: { uri },
           }}
-          icon={{
-            play: <Image source={ICONS.playButton} />,
-            pause: <Image source={ICONS.pauseButton} />,
-          }}
+          style={style}
         />
       </View>
     </View>

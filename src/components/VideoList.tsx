@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   FlatList,
   Keyboard,
@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import { COLORS, FONTS, SPACING } from '../res/theme';
-import { DiaryStore, Entry, useDiaryStore } from '../store/DiaryStore';
+import { useDiaryStore } from '../store/DiaryStore';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Button from './Button';
 import { useNavigation } from '@react-navigation/native';
