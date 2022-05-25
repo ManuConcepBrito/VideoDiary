@@ -20,7 +20,7 @@ const Button = ({ onPress, title, backgroundColor }: ButtonProps) => {
 const styles = StyleSheet.create({
   buttonText: {
     paddingVertical: SPACING.s,
-    paddingHorizontal: SPACING.xl,
+    paddingHorizontal: SPACING.xxl,
     fontSize: 20,
     fontFamily: FONTS.bold,
     color: COLORS.white,
