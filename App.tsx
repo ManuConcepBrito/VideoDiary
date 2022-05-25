@@ -6,6 +6,7 @@ import React from 'react';
 import VideoList from './src/components/VideoList';
 import CameraScreen from './src/components/CameraScreen';
 import DescribeVideo from './src/components/DescribeVideo';
+import VideoPreview from './src/components/VideoPreview';
 
 export type StackParamList = {
   VideoList: undefined;
@@ -35,6 +36,7 @@ const App = () => {
         <Stack.Screen name="VideoList" component={VideoList} />
         <Stack.Screen name="CameraScreen" component={CameraScreen} />
         <Stack.Screen name="DescribeVideo" component={DescribeVideo} />
+        <Stack.Screen name="VideoPreview" component={VideoPreview} />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -1,3 +1,4 @@
+import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { observer } from 'mobx-react-lite';
@@ -43,6 +44,7 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
   const saveTag = () => {
     setTags((tags) => [...tags, tagInput]);
     setTagInput('');
+    Keyboard.dismiss();
   };
 
   const addVideo = (store: DiaryStore, uri: string) => {
@@ -66,7 +68,7 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
       </View>
       <Text style={styles.body}>{STRINGS.giveItATag}</Text>
       <View style={styles.textInputContainer}>
-        <TextInput
+        <BottomSheetTextInput
           value={tagInput}
           style={styles.input}
           placeholder="Keywords about today..."
@@ -83,7 +85,7 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
       </View>
       <Text style={styles.body}>{STRINGS.notes}</Text>
       <View style={styles.notesContainer}>
-        <TextInput
+        <BottomSheetTextInput
           value={note}
           placeholder="Keywords about today..."
           autoCapitalize="none"
@@ -117,20 +119,11 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
 // stylesheet for container
 const styles = StyleSheet.create({
   container: {
-    flex: 5,
-    borderColor: COLORS.black,
-    borderWidth: 5,
-    margin: SPACING.m,
-    padding: SPACING.s,
-    backgroundColor: COLORS.white,
-    shadowColor: COLORS.grey,
-    shadowOpacity: 1,
-    shadowOffset: { width: 3, height: 3 },
-    shadowRadius: 0,
-    elevation: 5,
+    flex: 1,
+    paddingBottom: SPACING.l,
   },
   button: {
-    padding: SPACING.xs,
+    padding: SPACING.s,
     backgroundColor: COLORS.blue,
     borderColor: COLORS.black,
     borderWidth: 3,
@@ -138,7 +131,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   emojiContainer: {
-    flex: 0.4,
+    flex: 0.2,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
@@ -147,7 +140,7 @@ const styles = StyleSheet.create({
   },
   textInputContainer: {
     flexDirection: 'row',
-    flex: 0.9,
+    flex: 0.6,
     marginBottom: SPACING.s,
     backgroundColor: COLORS.white,
     shadowColor: COLORS.grey,

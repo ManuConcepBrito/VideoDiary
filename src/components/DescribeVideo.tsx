@@ -1,38 +1,45 @@
 import { RouteProp, useRoute } from '@react-navigation/native';
 import * as React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import { StackParamList } from '../../App';
-import { SPACING } from '../res/theme';
-import DescribeModal from './DescribeModal';
+import { COLORS, SPACING } from '../res/theme';
 import VideoPreview from './VideoPreview';
+import BottomSheet from '@gorhom/bottom-sheet';
+import { useMemo } from 'react';
+import DescribeModal from './DescribeModal';
 
 const DescribeVideo = () => {
   const route = useRoute<RouteProp<StackParamList, 'DescribeVideo'>>();
+
+  // variables
+  const snapPoints = useMemo(() => ['10%', '75%'], []);
+
   // return with a container and VideoPreview inside
   return (
-    <View style={styles.outerContainer}>
-      <View style={styles.videoPreview}>
+    <View>
+      <View>
         {/* route.param.uri */}
         <VideoPreview uri={route.params.uri} />
       </View>
-      <View style={styles.describeModal}>
-        {/* route.param.uri */}
+      <BottomSheet
+        index={1}
+        snapPoints={snapPoints}
+        style={styles.describeModal}
+        keyboardBehavior="interactive"
+        keyboardBlurBehavior="restore"
+      >
         <DescribeModal uri={route.params.uri} />
-      </View>
+      </BottomSheet>
     </View>
   );
 };
 // stylesheet for container
 const styles = StyleSheet.create({
-  outerContainer: {
-    flex: 1,
-  },
-  videoPreview: {
-    flex: 2,
-    paddingBottom: SPACING.m,
-  },
   describeModal: {
-    flex: 3,
+    borderColor: COLORS.black,
+    borderWidth: 5,
+    padding: SPACING.s,
+    backgroundColor: COLORS.white,
   },
 });
 
