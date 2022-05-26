@@ -30,7 +30,7 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="EditVideo"
+        initialRouteName="VideoList"
         screenOptions={{
           headerShown: false,
         }}

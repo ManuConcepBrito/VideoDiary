@@ -71,7 +71,7 @@ const VideoList = () => {
         data={store.filtered}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => console.log(item)}
+            onPress={() => navigation.navigate('EditVideo', { entry: item })}
             style={[
               styles.card,
               cardStyleMap[Number(item.date.getMilliseconds()) % numColumns],
