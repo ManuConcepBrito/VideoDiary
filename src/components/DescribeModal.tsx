@@ -99,12 +99,21 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
       </View>
       <View style={styles.finishButtonContainer}>
         <Button
-          backgroundColor={COLORS.red}
+          style={{
+            flex: 0.5,
+            backgroundColor: COLORS.red,
+            paddingVertical: SPACING.m,
+            marginRight: SPACING.s,
+          }}
           title="Cancel"
           onPress={() => navigation.goBack()}
         ></Button>
         <Button
-          backgroundColor={COLORS.black}
+          style={{
+            flex: 0.5,
+            backgroundColor: COLORS.black,
+            paddingVertical: SPACING.m,
+          }}
           title="Finish"
           onPress={() => {
             addVideo(store, uri);
@@ -170,7 +179,6 @@ const styles = StyleSheet.create({
   },
   finishButtonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     flex: 1,
   },

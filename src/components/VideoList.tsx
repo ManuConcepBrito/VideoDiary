@@ -92,11 +92,16 @@ const VideoList = () => {
         showsHorizontalScrollIndicator={false}
         onScrollBeginDrag={() => Keyboard.dismiss()}
       />
-      <View style={{ paddingTop: SPACING.m }}>
+      <View>
         <Button
           title="Create Entry"
           onPress={() => navigation.navigate('CameraScreen')}
-          backgroundColor={COLORS.black}
+          style={{
+            backgroundColor: COLORS.black,
+            paddingVertical: SPACING.m,
+            marginHorizontal: SPACING.xxxl,
+            marginVertical: SPACING.m,
+          }}
         ></Button>
       </View>
     </View>

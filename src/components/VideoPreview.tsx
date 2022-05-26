@@ -1,7 +1,6 @@
-import * as React from 'react';
-import { View } from 'react-native';
-import { ResizeMode } from 'expo-av';
-import VideoPlayer from 'expo-video-player';
+import { StyleSheet } from 'react-native';
+import { ResizeMode, Video } from 'expo-av';
+import React from 'react';
 
 type VideoPreviewProps = {
   uri: string;
@@ -9,18 +8,24 @@ type VideoPreviewProps = {
 };
 
 export default function VideoPreview({ uri, style }: VideoPreviewProps) {
+  const video = React.useRef(null);
+
   return (
-    <View>
-      <View>
-        <VideoPlayer
-          videoProps={{
-            shouldPlay: false,
-            resizeMode: ResizeMode.COVER,
-            source: { uri },
-          }}
-          style={style}
-        />
-      </View>
-    </View>
+    <Video
+      ref={video}
+      style={[styles.video, style]}
+      source={{
+        uri,
+      }}
+      useNativeControls
+      resizeMode={ResizeMode.COVER}
+      isLooping
+    />
   );
 }
+
+const styles = StyleSheet.create({
+  video: {
+    flex: 1,
+  },
+});

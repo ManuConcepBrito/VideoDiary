@@ -83,15 +83,14 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   videoPreview: {
-    flex: 0.9,
-    backgroundColor: 'red',
+    flex: 1,
   },
   editActions: {
     flex: 0.1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingBottom: SPACING.xl,
+    paddingBottom: SPACING.l,
   },
 });
 
