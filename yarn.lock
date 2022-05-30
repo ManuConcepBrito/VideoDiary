@@ -4775,6 +4775,13 @@
   "resolved" "https://registry.npmjs.org/expo-keep-awake/-/expo-keep-awake-10.1.1.tgz"
   "version" "10.1.1"
 
+"expo-media-library@~14.1.0":
+  "integrity" "sha512-hGXa+4pe6G6WHuNVoGCyBJ6W3VTUg1R63ULIcpXN+mU8k1AfPen/eEFaA3G2FUxdeTvyXJdWZOQY48uDu6I3hg=="
+  "resolved" "https://registry.npmjs.org/expo-media-library/-/expo-media-library-14.1.0.tgz"
+  "version" "14.1.0"
+  dependencies:
+    "@expo/config-plugins" "^4.0.14"
+
 "expo-modules-autolinking@~0.7.0":
   "integrity" "sha512-HKPcwXuRztEjhQRHxwhLXyAblkOsSi3n7aaBV6qgrOOi0WL/E3di8E2fowlHiiQW/i9vJDemMcvq0ZTCYW+bFg=="
   "resolved" "https://registry.npmjs.org/expo-modules-autolinking/-/expo-modules-autolinking-0.7.1.tgz"
