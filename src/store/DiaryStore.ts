@@ -1,5 +1,7 @@
-import { action, autorun, computed, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
 import React from 'react';
+import { Realm } from '@realm/react';
+import { Video } from '../models/Videos';
 
 export interface Entry {
   date: Date;
@@ -34,6 +36,7 @@ export class DiaryStore {
   constructor() {
     makeObservable(this, {
       entries: observable,
+      fetchVideos: action,
       filtered: computed,
       addEntry: action,
       changeFilter: action,
@@ -46,6 +49,33 @@ export class DiaryStore {
     });
     return filteredData;
   }
+
+  fetchVideos = () => {
+    Realm.open({
+      schema: [Video.schema],
+      deleteRealmIfMigrationNeeded: true,
+    })
+      .then((realm) => {
+        let videos = realm.objects('Video');
+        if (Object.keys(videos).length > 0) {
+          for (let key in videos) {
+            if (videos.hasOwnProperty(key)) {
+              this.entries.push({
+                description: videos[key]['description'],
+                videoURI: videos[key]['videoURI'],
+                mood: videos[key]['mood'],
+                createdAt: videos[key]['createdAt'],
+                tags: videos[key]['tags'],
+              });
+            }
+          }
+        }
+      })
+      .catch((err) => {
+        console.log('[Error] Realm in write');
+        console.log(err);
+      });
+  };
 
   changeFilter = (text: string) => {
     this.filter = text.toLowerCase();

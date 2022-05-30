@@ -8,6 +8,10 @@ import CameraScreen from './src/components/CameraScreen';
 import DescribeVideo from './src/components/DescribeVideo';
 import VideoPreview from './src/components/VideoPreview';
 
+import VideoContext, { Video } from './src/models/Videos';
+
+const { useRealm, useQuery, RealmProvider } = VideoContext;
+
 export type StackParamList = {
   VideoList: undefined;
   CameraScreen: undefined;
@@ -42,4 +46,15 @@ const App = () => {
   );
 };
 
-export default App;
+function AppWrapper() {
+  if (!RealmProvider) {
+    return null;
+  }
+  return (
+    <RealmProvider>
+      <App />
+    </RealmProvider>
+  );
+}
+
+export default AppWrapper;
