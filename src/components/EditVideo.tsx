@@ -7,25 +7,48 @@ import Button from './Button';
 import { COLORS, SPACING } from '../res/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useDiaryStore } from '../store/DiaryStore';
+import { useState } from 'react';
+import EditNoteModal from './EditNoteModal';
+import EditTagModal from './EditTagModal';
 
 type EditVideoProps = NativeStackNavigationProp<StackParamList, 'EditVideo'>;
 
 const EditVideo = () => {
+  const [tagModalVisible, setTagModalVisible] = useState(false);
+  const [noteModalVisible, setNoteModalVisible] = useState(false);
   const route = useRoute<RouteProp<StackParamList, 'EditVideo'>>();
+  const store = useDiaryStore();
+  // const entry = route.params.entry;
 
   const navigation = useNavigation<EditVideoProps>();
-  // const entry = route.params.entry;
+
+  const toggleTagModal = () => {
+    setTagModalVisible(!tagModalVisible);
+  };
+
+  const toggleNoteModal = () => {
+    setNoteModalVisible(!noteModalVisible);
+  };
 
   // return with a container and VideoPreview inside
   return (
     <View style={styles.container}>
+      <EditNoteModal
+        isVisible={noteModalVisible}
+        toggleNoteModal={toggleNoteModal}
+      ></EditNoteModal>
+      <EditTagModal
+        isVisible={tagModalVisible}
+        toggleTagModal={toggleTagModal}
+      ></EditTagModal>
       <View style={styles.videoPreview}>
         {/* route.param.uri */}
         <VideoPreview uri="https://assets.mixkit.co/videos/preview/mixkit-winter-fashion-cold-looking-woman-concept-video-39874-large.mp4" />
       </View>
       <View style={styles.editActions}>
         <Button
-          onPress={() => navigation.goBack()}
+          onPress={navigation.goBack}
           style={{
             flex: 0.3,
             backgroundColor: COLORS.black,
@@ -37,7 +60,7 @@ const EditVideo = () => {
           noShadows={true}
         />
         <Button
-          onPress={() => {}}
+          onPress={toggleTagModal}
           style={{
             backgroundColor: COLORS.yellow,
             flex: 1,
@@ -48,7 +71,7 @@ const EditVideo = () => {
           noShadows={true}
         />
         <Button
-          onPress={() => {}}
+          onPress={toggleNoteModal}
           style={{
             backgroundColor: COLORS.blue,
             flex: 1,
@@ -60,7 +83,10 @@ const EditVideo = () => {
           noShadows={true}
         />
         <Button
-          onPress={() => {}}
+          onPress={() => {
+            store.removeEntry(entry);
+            navigation.goBack();
+          }}
           style={{
             backgroundColor: COLORS.red,
             flex: 0.3,
@@ -76,7 +102,7 @@ const EditVideo = () => {
     </View>
   );
 };
-// stylesheet for container
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

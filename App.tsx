@@ -8,6 +8,7 @@ import CameraScreen from './src/components/CameraScreen';
 import DescribeVideo from './src/components/DescribeVideo';
 import { Entry } from './src/store/DiaryStore';
 import EditVideo from './src/components/EditVideo';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 
 export type StackParamList = {
   VideoList: undefined;
@@ -29,17 +30,19 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="VideoList"
-        screenOptions={{
-          headerShown: false,
-        }}
-      >
-        <Stack.Screen name="VideoList" component={VideoList} />
-        <Stack.Screen name="CameraScreen" component={CameraScreen} />
-        <Stack.Screen name="DescribeVideo" component={DescribeVideo} />
-        <Stack.Screen name="EditVideo" component={EditVideo} />
-      </Stack.Navigator>
+      <BottomSheetModalProvider>
+        <Stack.Navigator
+          initialRouteName="EditVideo"
+          screenOptions={{
+            headerShown: false,
+          }}
+        >
+          <Stack.Screen name="VideoList" component={VideoList} />
+          <Stack.Screen name="CameraScreen" component={CameraScreen} />
+          <Stack.Screen name="DescribeVideo" component={DescribeVideo} />
+          <Stack.Screen name="EditVideo" component={EditVideo} />
+        </Stack.Navigator>
+      </BottomSheetModalProvider>
     </NavigationContainer>
   );
 };

@@ -3,10 +3,10 @@ import React from 'react';
 
 export interface Entry {
   date: Date;
+  videoURI: string;
   mood?: Mood;
   note?: string;
   tags?: string[];
-  videoURI?: string;
 }
 
 export enum Mood {
@@ -37,6 +37,7 @@ export class DiaryStore {
       filtered: computed,
       addEntry: action,
       changeFilter: action,
+      removeEntry: action,
     });
   }
 
@@ -53,6 +54,13 @@ export class DiaryStore {
 
   addEntry = (entry: Entry) => {
     this.entries.push(entry);
+  };
+
+  removeEntry = (entry: Entry) => {
+    const filteredEntries = this.entries.filter(
+      (item) => item.date !== entry.date
+    );
+    this.entries = filteredEntries;
   };
 }
 

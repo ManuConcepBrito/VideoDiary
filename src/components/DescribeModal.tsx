@@ -8,7 +8,6 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  TextInput,
   Text,
   Keyboard,
 } from 'react-native';
