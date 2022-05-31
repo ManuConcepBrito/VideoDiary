@@ -46,7 +46,7 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
     Keyboard.dismiss();
   };
 
-  const addVideo = (store: DiaryStore, uri: string) => {
+  const addVideo = (uri: string) => {
     const entry: Entry = { date: new Date(), mood, note, tags, videoURI: uri };
     store.addEntry(entry);
   };
@@ -55,13 +55,31 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
     <View style={styles.container}>
       <Text style={styles.body}>{STRINGS.whatWasYourMoodToday}</Text>
       <View style={styles.emojiContainer}>
-        <TouchableOpacity onPress={() => setMood(Mood.NEUTRAL)}>
-          <Image style={styles.emoji} source={ICONS.neutralIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setMood(Mood.SAD)}>
+        <TouchableOpacity
+          style={{
+            borderColor: COLORS.blue,
+            borderWidth: mood === Mood.SAD ? 4 : 0,
+          }}
+          onPress={() => setMood(Mood.SAD)}
+        >
           <Image style={styles.emoji} source={ICONS.sadIcon} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setMood(Mood.HAPPY)}>
+        <TouchableOpacity
+          style={{
+            borderColor: COLORS.blue,
+            borderWidth: mood === Mood.NEUTRAL ? 4 : 0,
+          }}
+          onPress={() => setMood(Mood.NEUTRAL)}
+        >
+          <Image style={styles.emoji} source={ICONS.neutralIcon} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            borderColor: COLORS.blue,
+            borderWidth: mood === Mood.HAPPY ? 4 : 0,
+          }}
+          onPress={() => setMood(Mood.HAPPY)}
+        >
           <Image style={styles.emoji} source={ICONS.happyIcon} />
         </TouchableOpacity>
       </View>
@@ -115,7 +133,7 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
           }}
           title="Finish"
           onPress={() => {
-            addVideo(store, uri);
+            addVideo(uri);
             navigation.navigate('VideoList');
           }}
         ></Button>

@@ -62,6 +62,8 @@ export class DiaryStore {
     );
     this.entries = filteredEntries;
   };
+
+  // editTag = ()
 }
 
 export const diaryStore = new DiaryStore();

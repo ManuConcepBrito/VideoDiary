@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -6,81 +6,167 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
+  KeyboardAvoidingView,
+  Keyboard,
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
+import { EntryExitTransition } from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ICONS } from '../res/icons';
 import { COLORS, FONTS, SPACING } from '../res/theme';
+import { Entry, Mood, useDiaryStore } from '../store/DiaryStore';
 import Button from './Button';
 
 type EditTagModalProps = {
+  entry: Entry;
   isVisible: boolean;
   toggleTagModal: () => void;
 };
 
-const tags = [
-  'tag',
-  'tag',
-  'tag',
-  'tag',
-  'tag',
-  'tag',
-  'tag',
-  'tag',
-  'tag',
-  'tag',
-  'tag',
-  'tag',
-  'tag',
-  'tag',
-];
+const EditTagModal = ({
+  entry,
+  isVisible,
+  toggleTagModal,
+}: EditTagModalProps) => {
+  const store = useDiaryStore();
+  const [tags, setTags] = useState<string[]>([]);
+  const [mood, setMood] = useState<Mood>();
+  const [inputEditable, setInputEditable] = useState<boolean[]>([]);
+  const [newTag, setNewTag] = useState<string>('');
 
-const EditTagModal = ({ isVisible, toggleTagModal }: EditTagModalProps) => {
-  const [note, setTag] = React.useState<string>('');
+  useEffect(() => {
+    console.log(entry);
+    setTags(entry.tags ? entry.tags : []);
+    setMood(entry.mood);
+    const editStates = new Array(entry.tags?.length).fill(false);
+    setInputEditable(editStates);
+  }, []);
+
+  const deleteTag = (i: number) => {
+    const filteredTags = tags.filter((_, index) => index !== i);
+    setTags(filteredTags);
+  };
+
+  const toggleInputEditable = (i: number) => {
+    if (tags[i] === '') {
+      alert('Please enter a tag!');
+      return;
+    }
+    const toggledInputEditable = inputEditable.map((item, index) =>
+      index === i ? !item : item
+    );
+    setInputEditable(toggledInputEditable);
+  };
+
+  const editTag = (i: number, newText: string) => {
+    const editedTags = tags.map((item, index) =>
+      index === i ? newText : item
+    );
+    setTags(editedTags);
+  };
+
+  const addTag = (tag: string) => {
+    if (tag === '') {
+      alert('Please enter a tag!');
+      return;
+    }
+    setTags((tags) => [...tags, tag]);
+    setInputEditable((inputEditable) => [...inputEditable, false]);
+    setNewTag('');
+    Keyboard.dismiss();
+  };
+
+  const saveEntry = () => {
+    const editedEntry: Entry = {
+      date: entry.date,
+      mood,
+      note: entry.note,
+      tags,
+      videoURI: entry.videoURI,
+    };
+    store.removeEntry(entry);
+    store.addEntry(editedEntry);
+    toggleTagModal();
+  };
 
   return (
     <View>
       <Modal backdropOpacity={0.1} isVisible={isVisible}>
-        <View style={styles.container}>
+        <KeyboardAvoidingView behavior="padding" style={styles.container}>
           <Text style={styles.body}>Moods and Tags</Text>
           <View style={styles.emojiContainer}>
-            <TouchableOpacity onPress={() => {}}>
-              <Image style={styles.emoji} source={ICONS.neutralIcon} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity
+              style={{
+                borderColor: COLORS.blue,
+                borderWidth: mood === Mood.SAD ? 4 : 0,
+              }}
+              onPress={() => setMood(Mood.SAD)}
+            >
               <Image style={styles.emoji} source={ICONS.sadIcon} />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity
+              style={{
+                borderColor: COLORS.blue,
+                borderWidth: mood === Mood.NEUTRAL ? 4 : 0,
+              }}
+              onPress={() => setMood(Mood.NEUTRAL)}
+            >
+              <Image style={styles.emoji} source={ICONS.neutralIcon} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={{
+                borderColor: COLORS.blue,
+                borderWidth: mood === Mood.HAPPY ? 4 : 0,
+              }}
+              onPress={() => setMood(Mood.HAPPY)}
+            >
               <Image style={styles.emoji} source={ICONS.happyIcon} />
             </TouchableOpacity>
           </View>
           <View style={styles.tagListContainer}>
             <FlatList
               data={tags}
-              renderItem={({ item }) => (
+              renderItem={({ item, index }) => (
                 <View style={styles.textInputContainer}>
                   <TextInput
                     value={item}
-                    style={styles.input}
+                    style={[
+                      styles.input,
+                      {
+                        color: inputEditable[index]
+                          ? COLORS.black
+                          : COLORS.grey,
+                      },
+                    ]}
                     placeholder={item}
                     autoCapitalize="none"
                     autoCorrect={false}
-                    onEndEditing={() => {}}
-                    onChangeText={() => {}}
-                    onSubmitEditing={() => {}}
+                    editable={inputEditable[index]}
+                    onChangeText={(newText) => editTag(index, newText)}
+                    onSubmitEditing={() => toggleInputEditable(index)}
                   />
                   <Button
-                    onPress={() => {}}
+                    onPress={() => toggleInputEditable(index)}
                     style={{
-                      backgroundColor: COLORS.blue,
+                      backgroundColor: inputEditable[index]
+                        ? item === ''
+                          ? COLORS.grey
+                          : COLORS.green
+                        : COLORS.blue,
                       flex: 0.2,
                       marginHorizontal: SPACING.s,
                     }}
-                    icon={<Icon color={COLORS.white} name="edit" size={20} />}
+                    icon={
+                      <Icon
+                        color={COLORS.white}
+                        name={inputEditable[index] ? 'check' : 'edit'}
+                        size={20}
+                      />
+                    }
                   />
                   <Button
-                    onPress={() => {}}
+                    onPress={() => deleteTag(index)}
                     style={{
                       backgroundColor: COLORS.red,
                       flex: 0.2,
@@ -91,19 +177,52 @@ const EditTagModal = ({ isVisible, toggleTagModal }: EditTagModalProps) => {
               )}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
+              ListFooterComponentStyle={{ flex: 1, justifyContent: 'flex-end' }}
+              ListFooterComponent={
+                <View style={styles.textInputContainer}>
+                  <TextInput
+                    value={newTag}
+                    style={[
+                      styles.input,
+                      {
+                        color: newTag === '' ? COLORS.grey : COLORS.black,
+                      },
+                    ]}
+                    placeholder="Add new tag"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    onChangeText={(newText) => setNewTag(newText)}
+                    onSubmitEditing={() => addTag(newTag)}
+                  />
+                  <Button
+                    onPress={() => {
+                      newTag === ''
+                        ? alert('Please enter a tag!')
+                        : addTag(newTag);
+                    }}
+                    style={{
+                      backgroundColor:
+                        newTag === '' ? COLORS.grey : COLORS.green,
+                      flex: 0.4,
+                      marginLeft: SPACING.s,
+                    }}
+                    icon={<Icon color={COLORS.white} name="plus" size={20} />}
+                  />
+                </View>
+              }
             />
           </View>
 
           <Button
             title="Finish"
-            onPress={toggleTagModal}
+            onPress={saveEntry}
             style={{
               backgroundColor: COLORS.black,
               paddingVertical: SPACING.m,
-              marginTop: SPACING.m,
+              marginVertical: SPACING.m,
             }}
           ></Button>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
@@ -115,6 +234,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
     padding: SPACING.m,
     shadowColor: COLORS.black,
+    justifyContent: 'flex-end',
     shadowOpacity: 1,
     shadowOffset: { width: 3, height: 3 },
     shadowRadius: 0,
@@ -144,13 +264,14 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.white,
   },
   emojiContainer: {
-    flex: 0.2,
+    flex: 0.1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
+    marginVertical: SPACING.xl,
   },
   tagListContainer: {
-    flex: 0.8,
+    flex: 0.9,
     padding: SPACING.s,
     backgroundColor: COLORS.white,
     shadowColor: COLORS.grey,
@@ -175,10 +296,6 @@ const styles = StyleSheet.create({
   emoji: {
     height: 83,
     width: 83,
-  },
-  arrow: {
-    height: 23,
-    width: 33,
   },
 });
 

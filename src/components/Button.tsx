@@ -17,13 +17,22 @@ interface ButtonProps {
   title?: string;
   style?: StyleProp<ViewStyle>;
   noShadows?: boolean;
+  disabled?: boolean;
 }
 
-const Button = ({ onPress, title, icon, style, noShadows }: ButtonProps) => {
+const Button = ({
+  onPress,
+  title,
+  icon,
+  style,
+  noShadows,
+  disabled,
+}: ButtonProps) => {
   return (
     <TouchableOpacity
       style={[style, styles.buttonStyle, noShadows ? {} : styles.shadowStyle]}
       onPress={onPress}
+      disabled={disabled ? disabled : false}
     >
       <Text style={styles.buttonText}>
         {icon}

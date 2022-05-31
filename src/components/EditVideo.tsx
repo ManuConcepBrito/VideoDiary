@@ -7,7 +7,7 @@ import Button from './Button';
 import { COLORS, SPACING } from '../res/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { useDiaryStore } from '../store/DiaryStore';
+import { Entry, useDiaryStore, Mood } from '../store/DiaryStore';
 import { useState } from 'react';
 import EditNoteModal from './EditNoteModal';
 import EditTagModal from './EditTagModal';
@@ -19,6 +19,14 @@ const EditVideo = () => {
   const [noteModalVisible, setNoteModalVisible] = useState(false);
   const route = useRoute<RouteProp<StackParamList, 'EditVideo'>>();
   const store = useDiaryStore();
+  const entry: Entry = {
+    date: new Date(),
+    mood: Mood.NEUTRAL,
+    tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7'],
+    note: 'This is a note.',
+    videoURI:
+      'https://assets.mixkit.co/videos/preview/mixkit-winter-fashion-cold-looking-woman-concept-video-39874-large.mp4',
+  };
   // const entry = route.params.entry;
 
   const navigation = useNavigation<EditVideoProps>();
@@ -39,12 +47,13 @@ const EditVideo = () => {
         toggleNoteModal={toggleNoteModal}
       ></EditNoteModal>
       <EditTagModal
+        entry={entry}
         isVisible={tagModalVisible}
         toggleTagModal={toggleTagModal}
       ></EditTagModal>
       <View style={styles.videoPreview}>
         {/* route.param.uri */}
-        <VideoPreview uri="https://assets.mixkit.co/videos/preview/mixkit-winter-fashion-cold-looking-woman-concept-video-39874-large.mp4" />
+        <VideoPreview uri={entry.videoURI} />
       </View>
       <View style={styles.editActions}>
         <Button
