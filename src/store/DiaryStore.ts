@@ -21,9 +21,11 @@ const contains = ({ date }: Entry, query: string) => {
     date.toLocaleString('default', { weekday: 'long' }).includes(query) ||
     date.getDate.toString().includes(query)
   ) {
+    console.log('true');
     return true;
   }
 
+  console.log('false');
   return false;
 };
 
@@ -45,7 +47,10 @@ export class DiaryStore {
     const filteredData = this.entries.filter((entry) => {
       return contains(entry, this.filter);
     });
-    return filteredData;
+    const sortedData = filteredData.sort(
+      (a, b) => b.date.getTime() - a.date.getTime()
+    );
+    return sortedData;
   }
 
   changeFilter = (text: string) => {
@@ -62,8 +67,6 @@ export class DiaryStore {
     );
     this.entries = filteredEntries;
   };
-
-  // editTag = ()
 }
 
 export const diaryStore = new DiaryStore();

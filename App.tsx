@@ -32,7 +32,7 @@ const App = () => {
     <NavigationContainer>
       <BottomSheetModalProvider>
         <Stack.Navigator
-          initialRouteName="EditVideo"
+          initialRouteName="VideoList"
           screenOptions={{
             headerShown: false,
           }}

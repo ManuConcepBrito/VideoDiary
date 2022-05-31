@@ -1,3 +1,4 @@
+import { autorun } from 'mobx';
 import React, { useEffect, useState } from 'react';
 import {
   View,
@@ -11,7 +12,6 @@ import {
 } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import Modal from 'react-native-modal';
-import { EntryExitTransition } from 'react-native-reanimated';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ICONS } from '../res/icons';
 import { COLORS, FONTS, SPACING } from '../res/theme';
@@ -36,7 +36,6 @@ const EditTagModal = ({
   const [newTag, setNewTag] = useState<string>('');
 
   useEffect(() => {
-    console.log(entry);
     setTags(entry.tags ? entry.tags : []);
     setMood(entry.mood);
     const editStates = new Array(entry.tags?.length).fill(false);
@@ -64,6 +63,7 @@ const EditTagModal = ({
       index === i ? newText : item
     );
     setTags(editedTags);
+    Keyboard.dismiss();
   };
 
   const addTag = (tag: string) => {
@@ -79,11 +79,9 @@ const EditTagModal = ({
 
   const saveEntry = () => {
     const editedEntry: Entry = {
-      date: entry.date,
+      ...entry,
       mood,
-      note: entry.note,
       tags,
-      videoURI: entry.videoURI,
     };
     store.removeEntry(entry);
     store.addEntry(editedEntry);
@@ -93,7 +91,11 @@ const EditTagModal = ({
   return (
     <View>
       <Modal backdropOpacity={0.1} isVisible={isVisible}>
-        <KeyboardAvoidingView behavior="padding" style={styles.container}>
+        <KeyboardAvoidingView
+          keyboardVerticalOffset={SPACING.l}
+          behavior="padding"
+          style={styles.container}
+        >
           <Text style={styles.body}>Moods and Tags</Text>
           <View style={styles.emojiContainer}>
             <TouchableOpacity

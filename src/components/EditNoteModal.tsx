@@ -1,46 +1,81 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput, Keyboard } from 'react-native';
+import React, { useEffect } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Keyboard,
+  KeyboardAvoidingView,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import { STRINGS } from '../res/strings';
 import { COLORS, FONTS, SPACING } from '../res/theme';
+import { Entry, useDiaryStore } from '../store/DiaryStore';
 import Button from './Button';
 
 type EditNoteModalProps = {
+  entry: Entry;
   isVisible: boolean;
   toggleNoteModal: () => void;
 };
 
-const EditNoteModal = ({ isVisible, toggleNoteModal }: EditNoteModalProps) => {
+const EditNoteModal = ({
+  entry,
+  isVisible,
+  toggleNoteModal,
+}: EditNoteModalProps) => {
+  const store = useDiaryStore();
   const [note, setNote] = React.useState<string>('');
+
+  useEffect(() => {
+    setNote(entry.note ? entry.note : '');
+  }, []);
+
+  const saveEntry = () => {
+    const editedEntry: Entry = {
+      ...entry,
+      note,
+    };
+    store.removeEntry(entry);
+    store.addEntry(editedEntry);
+    toggleNoteModal();
+  };
 
   return (
     <View>
       <Modal backdropOpacity={0.1} isVisible={isVisible}>
-        <View style={styles.container}>
+        <KeyboardAvoidingView
+          keyboardVerticalOffset={SPACING.l}
+          behavior="padding"
+          style={styles.container}
+        >
           <Text style={styles.body}>{STRINGS.notes}</Text>
           <View style={styles.notesContainer}>
             <TextInput
               value={note}
               placeholder="Keywords about today..."
               autoCapitalize="none"
-              autoCorrect={false}
+              autoCorrect
               onEndEditing={() => Keyboard.dismiss()}
               onChangeText={(input) => setNote(input)}
               onSubmitEditing={() => {}}
+              multiline
+              blurOnSubmit
               clearButtonMode="always"
               style={styles.input}
             />
           </View>
           <Button
             title="Finish"
-            onPress={toggleNoteModal}
+            onPress={saveEntry}
             style={{
               backgroundColor: COLORS.black,
               paddingVertical: SPACING.m,
-              marginTop: SPACING.xl,
+              marginVertical: SPACING.m,
+              flex: 0.1,
             }}
           ></Button>
-        </View>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
@@ -58,6 +93,7 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderWidth: 3,
     borderColor: COLORS.black,
+    justifyContent: 'flex-end',
   },
   body: {
     fontFamily: FONTS.bold,

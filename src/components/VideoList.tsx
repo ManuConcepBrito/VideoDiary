@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FlatList,
   Keyboard,
@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import { COLORS, FONTS, SPACING } from '../res/theme';
-import { useDiaryStore } from '../store/DiaryStore';
+import { Entry, useDiaryStore } from '../store/DiaryStore';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Button from './Button';
 import { useNavigation } from '@react-navigation/native';
@@ -71,7 +71,10 @@ const VideoList = () => {
         data={store.filtered}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate('EditVideo', { entry: item })}
+            onPress={() => {
+              console.log(`Navigating to ${item}`);
+              navigation.navigate('EditVideo', { entry: item });
+            }}
             style={[
               styles.card,
               cardStyleMap[Number(item.date.getMilliseconds()) % numColumns],
@@ -87,7 +90,6 @@ const VideoList = () => {
           </TouchableOpacity>
         )}
         numColumns={numColumns}
-        stickyHeaderIndices={[0]}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         onScrollBeginDrag={() => Keyboard.dismiss()}

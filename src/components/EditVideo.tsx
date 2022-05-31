@@ -11,6 +11,8 @@ import { Entry, useDiaryStore, Mood } from '../store/DiaryStore';
 import { useState } from 'react';
 import EditNoteModal from './EditNoteModal';
 import EditTagModal from './EditTagModal';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import { observer } from 'mobx-react-lite';
 
 type EditVideoProps = NativeStackNavigationProp<StackParamList, 'EditVideo'>;
 
@@ -19,15 +21,7 @@ const EditVideo = () => {
   const [noteModalVisible, setNoteModalVisible] = useState(false);
   const route = useRoute<RouteProp<StackParamList, 'EditVideo'>>();
   const store = useDiaryStore();
-  const entry: Entry = {
-    date: new Date(),
-    mood: Mood.NEUTRAL,
-    tags: ['tag1', 'tag2', 'tag3', 'tag4', 'tag5', 'tag6', 'tag7'],
-    note: 'This is a note.',
-    videoURI:
-      'https://assets.mixkit.co/videos/preview/mixkit-winter-fashion-cold-looking-woman-concept-video-39874-large.mp4',
-  };
-  // const entry = route.params.entry;
+  const entry = route.params.entry;
 
   const navigation = useNavigation<EditVideoProps>();
 
@@ -43,6 +37,7 @@ const EditVideo = () => {
   return (
     <View style={styles.container}>
       <EditNoteModal
+        entry={entry}
         isVisible={noteModalVisible}
         toggleNoteModal={toggleNoteModal}
       ></EditNoteModal>
@@ -52,7 +47,6 @@ const EditVideo = () => {
         toggleTagModal={toggleTagModal}
       ></EditTagModal>
       <View style={styles.videoPreview}>
-        {/* route.param.uri */}
         <VideoPreview uri={entry.videoURI} />
       </View>
       <View style={styles.editActions}>
@@ -94,7 +88,7 @@ const EditVideo = () => {
         <Button
           onPress={() => {
             store.removeEntry(entry);
-            navigation.goBack();
+            navigation.navigate('VideoList');
           }}
           style={{
             backgroundColor: COLORS.red,

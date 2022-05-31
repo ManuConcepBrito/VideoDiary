@@ -41,6 +41,10 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
   };
 
   const saveTag = () => {
+    if (tagInput === '') {
+      alert('Please enter a tag!');
+      return;
+    }
     setTags((tags) => [...tags, tagInput]);
     setTagInput('');
     Keyboard.dismiss();
@@ -109,7 +113,7 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
           autoCorrect={false}
           onEndEditing={() => Keyboard.dismiss()}
           onChangeText={(input) => setNote(input)}
-          onSubmitEditing={() => saveTag()}
+          onSubmitEditing={() => setNote(note)}
           clearButtonMode="always"
           style={styles.input}
         />
