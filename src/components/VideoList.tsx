@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import { COLORS, FONTS, SPACING } from '../res/theme';
-import { DiaryStore, Entry, useDiaryStore } from '../store/DiaryStore';
+import { Entry, useDiaryStore } from '../store/DiaryStore';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Button from './Button';
 import { useNavigation } from '@react-navigation/native';
@@ -71,7 +71,10 @@ const VideoList = () => {
         data={store.filtered}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => console.log(item)}
+            onPress={() => {
+              console.log(`Navigating to ${item}`);
+              navigation.navigate('EditVideo', { entry: item });
+            }}
             style={[
               styles.card,
               cardStyleMap[Number(item.date.getMilliseconds()) % numColumns],
@@ -87,16 +90,20 @@ const VideoList = () => {
           </TouchableOpacity>
         )}
         numColumns={numColumns}
-        stickyHeaderIndices={[0]}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         onScrollBeginDrag={() => Keyboard.dismiss()}
       />
-      <View style={{ paddingTop: SPACING.m }}>
+      <View>
         <Button
           title="Create Entry"
           onPress={() => navigation.navigate('CameraScreen')}
-          backgroundColor={COLORS.black}
+          style={{
+            backgroundColor: COLORS.black,
+            paddingVertical: SPACING.m,
+            marginHorizontal: SPACING.xxxl,
+            marginVertical: SPACING.m,
+          }}
         ></Button>
       </View>
     </View>

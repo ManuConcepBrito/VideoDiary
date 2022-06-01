@@ -8,7 +8,6 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  TextInput,
   Text,
   Keyboard,
 } from 'react-native';
@@ -16,7 +15,7 @@ import { StackParamList } from '../../App';
 import { ICONS } from '../res/icons';
 import { STRINGS } from '../res/strings';
 import { COLORS, FONTS, SPACING } from '../res/theme';
-import { DiaryStore, Entry, Mood, useDiaryStore } from '../store/DiaryStore';
+import { Entry, Mood, useDiaryStore } from '../store/DiaryStore';
 import Button from './Button';
 import * as MediaLibrary from 'expo-media-library';
 
@@ -43,12 +42,16 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
   };
 
   const saveTag = () => {
+    if (tagInput === '') {
+      alert('Please enter a tag!');
+      return;
+    }
     setTags((tags) => [...tags, tagInput]);
     setTagInput('');
     Keyboard.dismiss();
   };
 
-  const addVideo = (store: DiaryStore, uri: string) => {
+  const addVideo = (uri: string) => {
     const entry: Entry = { date: new Date(), mood, note, tags, videoURI: uri };
     store.addEntry(entry);
   };
@@ -69,13 +72,31 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
     <View style={styles.container}>
       <Text style={styles.body}>{STRINGS.whatWasYourMoodToday}</Text>
       <View style={styles.emojiContainer}>
-        <TouchableOpacity onPress={() => setMood(Mood.NEUTRAL)}>
-          <Image style={styles.emoji} source={ICONS.neutralIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setMood(Mood.SAD)}>
+        <TouchableOpacity
+          style={{
+            borderColor: COLORS.blue,
+            borderWidth: mood === Mood.SAD ? 4 : 0,
+          }}
+          onPress={() => setMood(Mood.SAD)}
+        >
           <Image style={styles.emoji} source={ICONS.sadIcon} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setMood(Mood.HAPPY)}>
+        <TouchableOpacity
+          style={{
+            borderColor: COLORS.blue,
+            borderWidth: mood === Mood.NEUTRAL ? 4 : 0,
+          }}
+          onPress={() => setMood(Mood.NEUTRAL)}
+        >
+          <Image style={styles.emoji} source={ICONS.neutralIcon} />
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            borderColor: COLORS.blue,
+            borderWidth: mood === Mood.HAPPY ? 4 : 0,
+          }}
+          onPress={() => setMood(Mood.HAPPY)}
+        >
           <Image style={styles.emoji} source={ICONS.happyIcon} />
         </TouchableOpacity>
       </View>
@@ -105,22 +126,31 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
           autoCorrect={false}
           onEndEditing={() => Keyboard.dismiss()}
           onChangeText={(input) => setNote(input)}
-          onSubmitEditing={() => saveTag()}
+          onSubmitEditing={() => setNote(note)}
           clearButtonMode="always"
           style={styles.input}
         />
       </View>
       <View style={styles.finishButtonContainer}>
         <Button
-          backgroundColor={COLORS.red}
+          style={{
+            flex: 0.5,
+            backgroundColor: COLORS.red,
+            paddingVertical: SPACING.m,
+            marginRight: SPACING.s,
+          }}
           title="Cancel"
           onPress={() => navigation.goBack()}
         ></Button>
         <Button
-          backgroundColor={COLORS.black}
+          style={{
+            flex: 0.5,
+            backgroundColor: COLORS.black,
+            paddingVertical: SPACING.m,
+          }}
           title="Finish"
           onPress={() => {
-            addVideo(store, uri);
+            addVideo(uri);
             saveToLocalAlbum(uri);
             navigation.navigate('VideoList');
           }}
@@ -184,7 +214,6 @@ const styles = StyleSheet.create({
   },
   finishButtonContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     flex: 1,
   },

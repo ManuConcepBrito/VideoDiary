@@ -2,6 +2,7 @@ export const COLORS = {
   blue: '#01BAEF',
   yellow: '#FED90F',
   red: '#FF1053',
+  green: '#00FFC5',
 
   black: '#040F16',
   grey: '#81878A',
@@ -18,6 +19,7 @@ export const SPACING = {
   l: 24,
   xl: 40,
   xxl: 50,
+  xxxl: 70,
 };
 
 // const theme = createTheme({

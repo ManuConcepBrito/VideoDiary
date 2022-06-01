@@ -16,8 +16,8 @@ const DescribeVideo = () => {
 
   // return with a container and VideoPreview inside
   return (
-    <View>
-      <View>
+    <View style={{ flex: 1 }}>
+      <View style={{ flex: 0.9 }}>
         {/* route.param.uri */}
         <VideoPreview uri={route.params.uri} />
       </View>

@@ -3,10 +3,10 @@ import React from 'react';
 
 export interface Entry {
   date: Date;
+  videoURI: string;
   mood?: Mood;
   note?: string;
   tags?: string[];
-  videoURI?: string;
 }
 
 export enum Mood {
@@ -21,9 +21,11 @@ const contains = ({ date }: Entry, query: string) => {
     date.toLocaleString('default', { weekday: 'long' }).includes(query) ||
     date.getDate.toString().includes(query)
   ) {
+    console.log('true');
     return true;
   }
 
+  console.log('false');
   return false;
 };
 
@@ -37,6 +39,7 @@ export class DiaryStore {
       filtered: computed,
       addEntry: action,
       changeFilter: action,
+      removeEntry: action,
     });
   }
 
@@ -44,7 +47,10 @@ export class DiaryStore {
     const filteredData = this.entries.filter((entry) => {
       return contains(entry, this.filter);
     });
-    return filteredData;
+    const sortedData = filteredData.sort(
+      (a, b) => b.date.getTime() - a.date.getTime()
+    );
+    return sortedData;
   }
 
   changeFilter = (text: string) => {
@@ -53,6 +59,13 @@ export class DiaryStore {
 
   addEntry = (entry: Entry) => {
     this.entries.push(entry);
+  };
+
+  removeEntry = (entry: Entry) => {
+    const filteredEntries = this.entries.filter(
+      (item) => item.date !== entry.date
+    );
+    this.entries = filteredEntries;
   };
 }
 
