@@ -59,13 +59,6 @@ const VideoList = () => {
   };
 
   useEffect(() => {
-    const sortedData = toJS(store.entries).sort(
-      (a, b) => b.date.getTime() - a.date.getTime()
-    );
-    setEntries(sortedData);
-  }, []);
-
-  useEffect(() => {
     if (filter === '') {
       const sortedData = toJS(store.entries).sort(
         (a, b) => b.date.getTime() - a.date.getTime()

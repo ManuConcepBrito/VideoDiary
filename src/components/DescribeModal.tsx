@@ -18,6 +18,7 @@ import { COLORS, FONTS, SPACING } from '../res/theme';
 import { Entry, Mood, useDiaryStore } from '../store/DiaryStore';
 import Button from './Button';
 import * as MediaLibrary from 'expo-media-library';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 type DescribeModalProps = NativeStackNavigationProp<
   StackParamList,
@@ -104,7 +105,7 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
       <View style={styles.textInputContainer}>
         <BottomSheetTextInput
           value={tagInput}
-          style={styles.input}
+          style={[styles.input, { flex: 0.8 }]}
           placeholder="Keywords about today..."
           autoCapitalize="none"
           autoCorrect={false}
@@ -113,14 +114,22 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
           onSubmitEditing={() => saveTag()}
           clearButtonMode="always"
         />
-        <TouchableOpacity style={styles.button} onPress={() => saveTag()}>
-          <Image style={styles.arrow} source={ICONS.arrow} />
-        </TouchableOpacity>
+        <Button
+          style={{
+            backgroundColor: COLORS.blue,
+            marginLeft: SPACING.xs,
+            flex: 0.2,
+          }}
+          onPress={() => saveTag()}
+          icon={<Icon color={COLORS.white} name="arrow-right" size={20} />}
+        ></Button>
       </View>
       <Text style={styles.body}>{STRINGS.notes}</Text>
       <View style={styles.notesContainer}>
         <BottomSheetTextInput
           value={note}
+          multiline
+          blurOnSubmit
           placeholder="Keywords about today..."
           autoCapitalize="none"
           autoCorrect={false}
@@ -166,14 +175,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingBottom: SPACING.l,
   },
-  button: {
-    padding: SPACING.s,
-    backgroundColor: COLORS.blue,
-    borderColor: COLORS.black,
-    borderWidth: 3,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   emojiContainer: {
     flex: 0.2,
     flexDirection: 'row',
@@ -184,14 +185,9 @@ const styles = StyleSheet.create({
   },
   textInputContainer: {
     flexDirection: 'row',
-    flex: 0.6,
+    flex: 0.5,
     marginBottom: SPACING.s,
     backgroundColor: COLORS.white,
-    shadowColor: COLORS.grey,
-    shadowOpacity: 1,
-    shadowOffset: { width: 3, height: 3 },
-    shadowRadius: 0,
-    elevation: 5,
   },
   input: {
     flex: 1,
@@ -201,6 +197,12 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.bold,
     fontSize: 20,
     textAlign: 'center',
+    backgroundColor: COLORS.white,
+    shadowColor: COLORS.grey,
+    shadowOpacity: 1,
+    shadowOffset: { width: 3, height: 3 },
+    shadowRadius: 0,
+    elevation: 5,
   },
   notesContainer: {
     marginBottom: SPACING.s,

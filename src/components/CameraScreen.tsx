@@ -44,16 +44,16 @@ function CameraScreen() {
     }
   }, [videoUri]);
 
-  const onPressRecording = () => {
+  const onPressRecording = async () => {
     if (!latestRecordingValue.current) {
       latestRecordingValue.current = true;
-      Animated.spring(scaleRedCircle, {
+      Animated.timing(scaleRedCircle, {
         toValue: 0.5,
         useNativeDriver: true,
       }).start(({ finished }) => record(finished));
     } else {
       latestRecordingValue.current = false;
-      Animated.spring(scaleRedCircle, {
+      Animated.timing(scaleRedCircle, {
         toValue: 1,
         useNativeDriver: true,
       }).start(({ finished }) => stopRecording(finished));
