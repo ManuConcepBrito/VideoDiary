@@ -31,12 +31,14 @@ const EditTagModal = ({
 }: EditTagModalProps) => {
   const store = useDiaryStore();
   const [tags, setTags] = useState<string[]>([]);
+  const [editTags, setEditTags] = useState<string[]>([]);
   const [mood, setMood] = useState<Mood>();
   const [inputEditable, setInputEditable] = useState<boolean[]>([]);
   const [newTag, setNewTag] = useState<string>('');
 
   useEffect(() => {
     setTags(entry.tags ? entry.tags : []);
+    setEditTags(entry.tags ? entry.tags : []);
     setMood(entry.mood);
     const editStates = new Array(entry.tags?.length).fill(false);
     setInputEditable(editStates);
@@ -44,7 +46,13 @@ const EditTagModal = ({
 
   const deleteTag = (i: number) => {
     const filteredTags = tags.filter((_, index) => index !== i);
+    const filteredInputEditables = inputEditable.filter(
+      (_, index) => index !== i
+    );
+    const filteredEditTags = editTags.filter((_, index) => index !== i);
     setTags(filteredTags);
+    setInputEditable(filteredInputEditables);
+    setEditTags(filteredEditTags);
   };
 
   const toggleInputEditable = (i: number) => {
@@ -59,11 +67,15 @@ const EditTagModal = ({
   };
 
   const editTag = (i: number, newText: string) => {
-    const editedTags = tags.map((item, index) =>
+    const editedTags = editTags.map((item, index) =>
       index === i ? newText : item
     );
-    setTags(editedTags);
-    Keyboard.dismiss();
+    setEditTags(editedTags);
+  };
+
+  const saveTags = (i: number) => {
+    setTags(editTags);
+    toggleInputEditable(i);
   };
 
   const addTag = (tag: string) => {
@@ -72,6 +84,7 @@ const EditTagModal = ({
       return;
     }
     setTags((tags) => [...tags, tag]);
+    setEditTags((editTags) => [...editTags, tag]);
     setInputEditable((inputEditable) => [...inputEditable, false]);
     setNewTag('');
     Keyboard.dismiss();
@@ -128,54 +141,61 @@ const EditTagModal = ({
           </View>
           <View style={styles.tagListContainer}>
             <FlatList
+              keyboardShouldPersistTaps={'always'}
+              key={'key'}
+              keyExtractor={(item) => '' + item}
               data={tags}
               renderItem={({ item, index }) => (
-                <View style={styles.textInputContainer}>
-                  <TextInput
-                    value={item}
-                    style={[
-                      styles.input,
-                      {
-                        color: inputEditable[index]
-                          ? COLORS.black
-                          : COLORS.grey,
-                      },
-                    ]}
-                    placeholder={item}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    editable={inputEditable[index]}
-                    onChangeText={(newText) => editTag(index, newText)}
-                    onSubmitEditing={() => toggleInputEditable(index)}
-                  />
-                  <Button
-                    onPress={() => toggleInputEditable(index)}
-                    style={{
-                      backgroundColor: inputEditable[index]
-                        ? item === ''
-                          ? COLORS.grey
-                          : COLORS.green
-                        : COLORS.blue,
-                      flex: 0.2,
-                      marginHorizontal: SPACING.s,
-                    }}
-                    icon={
-                      <Icon
-                        color={COLORS.white}
-                        name={inputEditable[index] ? 'check' : 'edit'}
-                        size={20}
-                      />
-                    }
-                  />
-                  <Button
-                    onPress={() => deleteTag(index)}
-                    style={{
-                      backgroundColor: COLORS.red,
-                      flex: 0.2,
-                    }}
-                    icon={<Icon color={COLORS.white} name="trash" size={20} />}
-                  />
-                </View>
+                <>
+                  <View style={styles.textInputContainer}>
+                    <TextInput
+                      value={editTags[index]}
+                      style={[
+                        styles.input,
+                        {
+                          color: inputEditable[index]
+                            ? COLORS.black
+                            : COLORS.grey,
+                        },
+                      ]}
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      editable={inputEditable[index]}
+                      onChangeText={(newText) => editTag(index, newText)}
+                      onSubmitEditing={() => saveTags(index)}
+                      onEndEditing={() => saveTags(index)}
+                    />
+                    <Button
+                      onPress={() => saveTags(index)}
+                      style={{
+                        backgroundColor: inputEditable[index]
+                          ? item === ''
+                            ? COLORS.grey
+                            : COLORS.green
+                          : COLORS.blue,
+                        flex: 0.2,
+                        marginHorizontal: SPACING.s,
+                      }}
+                      icon={
+                        <Icon
+                          color={COLORS.white}
+                          name={inputEditable[index] ? 'check' : 'edit'}
+                          size={20}
+                        />
+                      }
+                    />
+                    <Button
+                      onPress={() => deleteTag(index)}
+                      style={{
+                        backgroundColor: COLORS.red,
+                        flex: 0.2,
+                      }}
+                      icon={
+                        <Icon color={COLORS.white} name="trash" size={20} />
+                      }
+                    />
+                  </View>
+                </>
               )}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
