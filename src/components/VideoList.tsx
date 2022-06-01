@@ -15,7 +15,8 @@ import Button from './Button';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamList } from '../../App';
-import { observer } from 'mobx-react-lite';
+import { Observer, observer } from 'mobx-react-lite';
+import { toJS } from 'mobx';
 
 const numColumns = 3;
 
@@ -23,12 +24,55 @@ type VideoListProps = NativeStackNavigationProp<StackParamList, 'VideoList'>;
 
 const VideoList = () => {
   const navigation = useNavigation<VideoListProps>();
-  const [query, setQuery] = useState('');
+  const [filter, setFilter] = useState('');
+
+  const [entries, setEntries] = useState<Entry[]>([]);
   const store = useDiaryStore();
 
-  const updateFilter = (filter: string) => {
-    setQuery(filter);
+  const contains = ({ date }: Entry, query: string) => {
+    if (
+      date
+        .toLocaleString('default', { month: 'long' })
+        .toLowerCase()
+        .includes(query) ||
+      date
+        .toLocaleString('default', { weekday: 'long' })
+        .toLowerCase()
+        .includes(query) ||
+      date.getDate().toString().includes(query)
+    ) {
+      return true;
+    }
+
+    return false;
   };
+
+  const updateFilter = () => {
+    const sortedData = toJS(store.entries).sort(
+      (a, b) => b.date.getTime() - a.date.getTime()
+    );
+    const filteredEntries = sortedData.filter((entry) => {
+      return contains(entry, filter);
+    });
+    setEntries(filteredEntries);
+    Keyboard.dismiss();
+  };
+
+  useEffect(() => {
+    const sortedData = toJS(store.entries).sort(
+      (a, b) => b.date.getTime() - a.date.getTime()
+    );
+    setEntries(sortedData);
+  }, []);
+
+  useEffect(() => {
+    if (filter === '') {
+      const sortedData = toJS(store.entries).sort(
+        (a, b) => b.date.getTime() - a.date.getTime()
+      );
+      setEntries(sortedData);
+    }
+  }, [filter]);
 
   return (
     <View style={styles.container}>
@@ -53,42 +97,48 @@ const VideoList = () => {
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
-            onEndEditing={() => Keyboard.dismiss()}
+            onEndEditing={() => updateFilter()}
             clearButtonMode="always"
-            value={query}
+            value={filter}
             placeholder="Tags, Days, Dates..."
-            onSubmitEditing={() => {
-              store.changeFilter(query);
-            }}
-            onChangeText={(input) => {
-              updateFilter(input);
+            onSubmitEditing={() => updateFilter()}
+            onChangeText={(text) => {
+              setFilter(text.toLowerCase());
             }}
             style={styles.textInput}
           />
         </View>
       </View>
       <FlatList
-        data={store.filtered}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            onPress={() => {
-              console.log(`Navigating to ${item}`);
-              navigation.navigate('EditVideo', { entry: item });
-            }}
-            style={[
-              styles.card,
-              cardStyleMap[Number(item.date.getMilliseconds()) % numColumns],
-            ]}
-          >
-            <Text style={styles.body}>
-              {item.date.toLocaleString('default', { weekday: 'short' })}
-            </Text>
-            <Text style={styles.body}>
-              {item.date.toLocaleString('default', { month: 'short' })}{' '}
-              {item.date.getDate()}
-            </Text>
-          </TouchableOpacity>
-        )}
+        data={entries}
+        renderItem={({ item }) => {
+          return (
+            <Observer>
+              {() => (
+                <TouchableOpacity
+                  onPress={() => {
+                    console.log(`Navigating to ${item}`);
+                    navigation.navigate('EditVideo', { entry: item });
+                  }}
+                  style={[
+                    styles.card,
+                    cardStyleMap[
+                      Number(item.date.getMilliseconds()) % numColumns
+                    ],
+                  ]}
+                >
+                  <Text style={styles.body}>
+                    {item.date.toLocaleString('default', { weekday: 'short' })}
+                  </Text>
+                  <Text style={styles.body}>
+                    {item.date.toLocaleString('default', { month: 'short' })}{' '}
+                    {item.date.getDate()}
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </Observer>
+          );
+        }}
         numColumns={numColumns}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
