@@ -14,6 +14,7 @@ import { COLORS, FONTS } from '../res/theme';
 import { ICONS } from '../res/icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamList } from '../../App';
+import * as MediaLibrary from 'expo-media-library';
 
 type CameraScreenProps = NativeStackNavigationProp<
   StackParamList,
@@ -67,7 +68,21 @@ const CameraScreen = () => {
       const video = await cameraRef.current.recordAsync({
         quality: Camera.Constants.VideoQuality['1080p'],
       });
+      await saveToLocalAlbum(video.uri);
       setVideoUri(video.uri);
+    }
+  };
+
+  const saveToLocalAlbum = async (videoUri) => {
+    // create asset
+    const videoAsset = await MediaLibrary.createAssetAsync(videoUri);
+    // check if album exists otherwise create it
+    let album = await MediaLibrary.getAlbumAsync('VideoDiary');
+    console.log('albums', album);
+    if (!album) {
+      await MediaLibrary.createAlbumAsync('VideoDiary', videoAsset);
+    } else {
+      await MediaLibrary.addAssetsToAlbumAsync(videoAsset, album);
     }
   };
 
@@ -90,8 +105,14 @@ const CameraScreen = () => {
   const askPermissionsAsync = async () => {
     const cameraPermission = await Camera.requestCameraPermissionsAsync();
     const audioPermission = await Camera.requestMicrophonePermissionsAsync();
+    let savingPermission = await MediaLibrary.getPermissionsAsync();
+    console.log('savingPermission', savingPermission);
+    if (savingPermission.accessPrivileges !== 'all') {
+      savingPermission = await MediaLibrary.requestPermissionsAsync();
+    }
     console.log('cameraPermission', cameraPermission);
     console.log('audioPermission', audioPermission);
+    console.log('savingPermission after asking', savingPermission);
 
     // check both permissions are granted
     if (
