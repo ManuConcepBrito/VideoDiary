@@ -56,7 +56,7 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
     store.addEntry(entry);
   };
 
-  const saveToLocalAlbum = async (videoUri) => {
+  const saveToLocalAlbum = async (videoUri: string) => {
     // create asset
     const videoAsset = await MediaLibrary.createAssetAsync(videoUri);
     // check if album exists otherwise create it
