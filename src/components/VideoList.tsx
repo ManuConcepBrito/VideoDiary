@@ -25,46 +25,10 @@ type VideoListProps = NativeStackNavigationProp<StackParamList, 'VideoList'>;
 const VideoList = () => {
   const navigation = useNavigation<VideoListProps>();
   const [filter, setFilter] = useState('');
-
-  const [entries, setEntries] = useState<Entry[]>([]);
   const store = useDiaryStore();
 
-  const contains = ({ date }: Entry, query: string) => {
-    if (
-      date
-        .toLocaleString('default', { month: 'long' })
-        .toLowerCase()
-        .includes(query) ||
-      date
-        .toLocaleString('default', { weekday: 'long' })
-        .toLowerCase()
-        .includes(query) ||
-      date.getDate().toString().includes(query)
-    ) {
-      return true;
-    }
-
-    return false;
-  };
-
-  const updateFilter = () => {
-    const sortedData = toJS(store.entries).sort(
-      (a, b) => b.date.getTime() - a.date.getTime()
-    );
-    const filteredEntries = sortedData.filter((entry) => {
-      return contains(entry, filter);
-    });
-    setEntries(filteredEntries);
-    Keyboard.dismiss();
-  };
-
   useEffect(() => {
-    if (filter === '') {
-      const sortedData = toJS(store.entries).sort(
-        (a, b) => b.date.getTime() - a.date.getTime()
-      );
-      setEntries(sortedData);
-    }
+    store.getFilteredEntries(filter);
   }, [filter]);
 
   return (
@@ -90,11 +54,11 @@ const VideoList = () => {
           <TextInput
             autoCapitalize="none"
             autoCorrect={false}
-            onEndEditing={() => updateFilter()}
+            onEndEditing={() => store.getFilteredEntries(filter)}
             clearButtonMode="always"
             value={filter}
             placeholder="Tags, Days, Dates..."
-            onSubmitEditing={() => updateFilter()}
+            onSubmitEditing={() => store.getFilteredEntries(filter)}
             onChangeText={(text) => {
               setFilter(text.toLowerCase());
             }}
@@ -103,7 +67,7 @@ const VideoList = () => {
         </View>
       </View>
       <FlatList
-        data={entries}
+        data={store.filteredEntries.slice()}
         renderItem={({ item }) => {
           return (
             <Observer>
