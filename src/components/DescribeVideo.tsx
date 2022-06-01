@@ -12,7 +12,7 @@ const DescribeVideo = () => {
   const route = useRoute<RouteProp<StackParamList, 'DescribeVideo'>>();
 
   // variables
-  const snapPoints = useMemo(() => ['10%', '75%'], []);
+  const snapPoints = useMemo(() => ['10%', '90%'], []);
 
   // return with a container and VideoPreview inside
   return (

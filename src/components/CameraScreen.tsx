@@ -9,7 +9,7 @@ import {
   Text,
 } from 'react-native';
 import { useIsFocused, useNavigation } from '@react-navigation/native';
-import { Camera } from 'expo-camera';
+import { Camera, CameraRecordingOptions } from 'expo-camera';
 import { COLORS, FONTS } from '../res/theme';
 import { ICONS } from '../res/icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -22,8 +22,11 @@ type CameraScreenProps = NativeStackNavigationProp<
 >;
 
 // functional componenent using expo camera
-const CameraScreen = () => {
+function CameraScreen() {
   const cameraRef = React.useRef(null);
+  const options: CameraRecordingOptions = {
+    mirror: false,
+  };
   const navigation = useNavigation<CameraScreenProps>();
   const [videoUri, setVideoUri] = React.useState(null);
   // track recording button state
@@ -37,22 +40,18 @@ const CameraScreen = () => {
   const isFocused = useIsFocused();
   React.useEffect(() => {
     if (videoUri !== null) {
-      console.log(videoUri);
       navigation.navigate('DescribeVideo', { uri: videoUri });
     }
   }, [videoUri]);
 
   const onPressRecording = () => {
-    console.log('latest recording value', latestRecordingValue.current);
     if (!latestRecordingValue.current) {
       latestRecordingValue.current = true;
-      console.log('Starting animation');
       Animated.spring(scaleRedCircle, {
         toValue: 0.5,
         useNativeDriver: true,
       }).start(({ finished }) => record(finished));
     } else {
-      console.log('Finishing animation');
       latestRecordingValue.current = false;
       Animated.spring(scaleRedCircle, {
         toValue: 1,
@@ -62,34 +61,14 @@ const CameraScreen = () => {
   };
 
   const record = async (finished) => {
-    console.log('Finished:', finished);
     if (finished) {
-      console.log('Starting recording');
-      const video = await cameraRef.current.recordAsync({
-        quality: Camera.Constants.VideoQuality['1080p'],
-      });
-      await saveToLocalAlbum(video.uri);
+      const video = await cameraRef.current.recordAsync(options);
       setVideoUri(video.uri);
     }
   };
 
-  const saveToLocalAlbum = async (videoUri) => {
-    // create asset
-    const videoAsset = await MediaLibrary.createAssetAsync(videoUri);
-    // check if album exists otherwise create it
-    let album = await MediaLibrary.getAlbumAsync('VideoDiary');
-    console.log('albums', album);
-    if (!album) {
-      await MediaLibrary.createAlbumAsync('VideoDiary', videoAsset);
-    } else {
-      await MediaLibrary.addAssetsToAlbumAsync(videoAsset, album);
-    }
-  };
-
   const stopRecording = async (finished) => {
-    console.log('Finished Stop Recording:', finished);
     if (finished) {
-      console.log('Stopping recording');
       cameraRef.current.stopRecording();
     }
   };
@@ -106,13 +85,9 @@ const CameraScreen = () => {
     const cameraPermission = await Camera.requestCameraPermissionsAsync();
     const audioPermission = await Camera.requestMicrophonePermissionsAsync();
     let savingPermission = await MediaLibrary.getPermissionsAsync();
-    console.log('savingPermission', savingPermission);
     if (savingPermission.accessPrivileges !== 'all') {
       savingPermission = await MediaLibrary.requestPermissionsAsync();
     }
-    console.log('cameraPermission', cameraPermission);
-    console.log('audioPermission', audioPermission);
-    console.log('savingPermission after asking', savingPermission);
 
     // check both permissions are granted
     if (
@@ -166,7 +141,7 @@ const CameraScreen = () => {
       </Camera>
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
