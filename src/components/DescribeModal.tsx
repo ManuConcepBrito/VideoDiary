@@ -18,6 +18,7 @@ import { STRINGS } from '../res/strings';
 import { COLORS, FONTS, SPACING } from '../res/theme';
 import { DiaryStore, Entry, Mood, useDiaryStore } from '../store/DiaryStore';
 import Button from './Button';
+import * as MediaLibrary from 'expo-media-library';
 
 type DescribeModalProps = NativeStackNavigationProp<
   StackParamList,
@@ -50,6 +51,18 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
   const addVideo = (store: DiaryStore, uri: string) => {
     const entry: Entry = { date: new Date(), mood, note, tags, videoURI: uri };
     store.addEntry(entry);
+  };
+
+  const saveToLocalAlbum = async (videoUri) => {
+    // create asset
+    const videoAsset = await MediaLibrary.createAssetAsync(videoUri);
+    // check if album exists otherwise create it
+    let album = await MediaLibrary.getAlbumAsync('VideoDiary');
+    if (!album) {
+      await MediaLibrary.createAlbumAsync('VideoDiary', videoAsset);
+    } else {
+      await MediaLibrary.addAssetsToAlbumAsync(videoAsset, album);
+    }
   };
 
   return (
@@ -108,6 +121,7 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
           title="Finish"
           onPress={() => {
             addVideo(store, uri);
+            saveToLocalAlbum(uri);
             navigation.navigate('VideoList');
           }}
         ></Button>
