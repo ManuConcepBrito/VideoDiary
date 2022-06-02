@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { COLORS, FONTS, SPACING } from '../res/theme';
 import { Entry, Tag, useDiaryStore } from '../store/DiaryStore';
+import { useDiaryStore } from '../store/DiaryStore';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Button from './Button';
 import { useNavigation } from '@react-navigation/native';

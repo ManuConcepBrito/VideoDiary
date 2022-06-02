@@ -7,12 +7,10 @@ import Button from './Button';
 import { COLORS, SPACING } from '../res/theme';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { Entry, useDiaryStore, Mood } from '../store/DiaryStore';
+import { useDiaryStore } from '../store/DiaryStore';
 import { useState } from 'react';
 import EditNoteModal from './EditNoteModal';
 import EditTagModal from './EditTagModal';
-import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { observer } from 'mobx-react-lite';
 
 type EditVideoProps = NativeStackNavigationProp<StackParamList, 'EditVideo'>;
 
