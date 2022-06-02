@@ -9,14 +9,13 @@ import {
   View,
 } from 'react-native';
 import { COLORS, FONTS, SPACING } from '../res/theme';
-import { Entry, useDiaryStore } from '../store/DiaryStore';
+import { useDiaryStore } from '../store/DiaryStore';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Button from './Button';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamList } from '../../App';
 import { Observer, observer } from 'mobx-react-lite';
-import { toJS } from 'mobx';
 
 const numColumns = 3;
 

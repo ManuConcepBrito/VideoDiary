@@ -43,7 +43,7 @@ export class DiaryStore {
     this.filteredEntries = this.sortedEntries;
   };
 
-  getFilteredEntries = (filter) => {
+  getFilteredEntries = (filter: string) => {
     const sortedEntries = this.sortedEntries;
 
     if (filter === '') {
@@ -85,7 +85,7 @@ const containsDate = ({ date }: Entry, query: string) => {
 };
 
 const containsTag = ({ tags }: Entry, tagQuery: string) => {
-  if (tags && tags.length === 0) {
+  if (!tags || tags.length === 0) {
     return true;
   } else {
     let filteredTags = tags.filter((tag) => tag.includes(tagQuery));
