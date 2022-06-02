@@ -43,11 +43,11 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
   };
 
   const saveTag = () => {
-    if (tagInput === '') {
+    if (tagInput.trim() === '') {
       alert('Please enter a tag!');
       return;
     }
-    setTags((tags) => [...tags, tagInput]);
+    setTags((tags) => [...tags, tagInput.trim()]);
     setTagInput('');
     Keyboard.dismiss();
   };

@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import { COLORS, FONTS, SPACING } from '../res/theme';
+import { Entry, Tag, useDiaryStore } from '../store/DiaryStore';
 import { useDiaryStore } from '../store/DiaryStore';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Button from './Button';
@@ -16,19 +17,74 @@ import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamList } from '../../App';
 import { Observer, observer } from 'mobx-react-lite';
+import Autocomplete from './Autocomplete';
+import { toJS } from 'mobx';
 
 const numColumns = 3;
+
+const tagsTry: Tag[] = [
+  {
+    id: 0,
+    text: 'tag',
+  },
+  {
+    id: 1,
+    text: 'better',
+  },
+  {
+    id: 2,
+    text: 'Sofya',
+  },
+];
 
 type VideoListProps = NativeStackNavigationProp<StackParamList, 'VideoList'>;
 
 const VideoList = () => {
   const navigation = useNavigation<VideoListProps>();
-  const [filter, setFilter] = useState('');
+  const [filter, setFilter] = useState<string>('');
+  const [editTags, setEditTags] = useState<string[]>([]);
   const store = useDiaryStore();
 
   useEffect(() => {
     store.getFilteredEntries(filter);
   }, [filter]);
+
+  const SearchTextInput = () => {
+    return (
+      <TextInput
+        autoCapitalize="none"
+        autoCorrect={false}
+        onEndEditing={() =>
+          store.getFilteredEntries(filter.toLowerCase().trim())
+        }
+        clearButtonMode="always"
+        value={filter}
+        placeholder="Tags, Days, Dates..."
+        onSubmitEditing={() =>
+          store.getFilteredEntries(filter.toLowerCase().trim())
+        }
+        style={styles.textInput}
+        onChangeText={(text) => {
+          setFilter(text.toLowerCase());
+        }}
+      />
+    );
+  };
+  const filterTags = () => {
+    if (filter === '') {
+      return [];
+    }
+    const filteredTags = store.tags.filter((tag) =>
+      tag.text.toLowerCase().includes(filter.toLowerCase().trim())
+    );
+    if (
+      filteredTags.length === 1 &&
+      filteredTags[0].text === filter.toLowerCase().trim()
+    ) {
+      return [];
+    }
+    return filteredTags;
+  };
 
   return (
     <View style={styles.container}>
@@ -42,26 +98,37 @@ const VideoList = () => {
         <View
           style={{
             position: 'absolute',
-            zIndex: 1,
             paddingTop: SPACING.m + 2,
             paddingLeft: SPACING.m + 3,
+            // for some strange reason it needs to be higher than 1
+            zIndex: 2,
           }}
         >
           <Icon color={COLORS.grey} name="search" size={20} />
         </View>
-        <View style={styles.searchBar}>
-          <TextInput
-            autoCapitalize="none"
-            autoCorrect={false}
-            onEndEditing={() => store.getFilteredEntries(filter)}
-            clearButtonMode="always"
+        <View style={{ zIndex: 1 }}>
+          <Autocomplete
+            renderTextInput={SearchTextInput}
             value={filter}
-            placeholder="Tags, Days, Dates..."
-            onSubmitEditing={() => store.getFilteredEntries(filter)}
-            onChangeText={(text) => {
-              setFilter(text.toLowerCase());
+            autoCorrect={false}
+            data={filterTags()}
+            listContainerStyle={{
+              borderWidth: 3,
+              borderTopWidth: 0,
+              marginBottom: 0,
+              borderColor: 'black',
             }}
-            style={styles.textInput}
+            flatListProps={{
+              keyExtractor: (tag: Tag) => tag.id,
+              renderItem: ({ item: { text } }: Tag) => (
+                <TouchableOpacity
+                  style={styles.autocompleteText}
+                  onPress={() => setFilter(text)}
+                >
+                  <Text style={styles.autocompleteText}>{text}</Text>
+                </TouchableOpacity>
+              ),
+            }}
           />
         </View>
       </View>
@@ -118,6 +185,7 @@ const VideoList = () => {
 
 const styles = StyleSheet.create({
   container: {
+    position: 'relative',
     flex: 1,
     flexGrow: 1,
     backgroundColor: COLORS.white,
@@ -153,7 +221,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowOffset: { width: 3, height: 3 },
     shadowRadius: 0,
-    elevation: 5,
     aspectRatio: 1,
     justifyContent: 'center',
     maxWidth: '31%',
@@ -182,6 +249,10 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 3, height: 3 },
     shadowRadius: 0,
     elevation: 5,
+  },
+  autocompleteText: {
+    fontFamily: FONTS.bold,
+    fontSize: 20,
   },
 });
 

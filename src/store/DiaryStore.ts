@@ -8,6 +8,10 @@ export interface Entry {
   note?: string;
   tags?: string[];
 }
+export interface Tag {
+  text: string;
+  id: number;
+}
 
 export enum Mood {
   HAPPY = 'Happy',
@@ -18,11 +22,16 @@ export enum Mood {
 export class DiaryStore {
   entries: Entry[] = [];
   filteredEntries: Entry[] = [];
+  // use tagSet cause lookup is O(1) but tags object bc RN Flatlist are stupid
+  tagsSet = new Set();
+  tags: Tag[] = [];
 
   constructor() {
     makeObservable(this, {
       entries: observable,
       filteredEntries: observable,
+      tagsSet: observable,
+      tags: observable,
       addEntry: action,
       removeEntry: action,
       sortedEntries: computed,
@@ -32,6 +41,15 @@ export class DiaryStore {
 
   addEntry = (entry: Entry) => {
     this.entries.push(entry);
+    const { tags } = entry;
+    tags?.forEach((tag, index) => {
+      if (!this.tagsSet.has(tag)) {
+        this.tagsSet.add(tag);
+        let id = this.tags.length;
+        this.tags.push({ text: tag, id: id });
+        console.log(this.tags);
+      }
+    });
     this.filteredEntries = this.sortedEntries;
   };
 
@@ -85,8 +103,9 @@ const containsDate = ({ date }: Entry, query: string) => {
 };
 
 const containsTag = ({ tags }: Entry, tagQuery: string) => {
-  if (!tags || tags.length === 0) {
-    return true;
+  // when there is not tag in the entry don't include them in the results
+  if (tags?.length === 0) {
+    return false;
   } else {
     let filteredTags = tags.filter((tag) => tag.includes(tagQuery));
     if (filteredTags.length === 0) {
