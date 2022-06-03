@@ -61,7 +61,7 @@ export class DiaryStore {
     this.filteredEntries = this.sortedEntries;
   };
 
-  getFilteredEntries = (filter) => {
+  getFilteredEntries = (filter: string) => {
     const sortedEntries = this.sortedEntries;
 
     if (filter === '') {
