@@ -9,11 +9,7 @@ import {
   View,
 } from 'react-native';
 import { COLORS, FONTS, SPACING } from '../res/theme';
-<<<<<<< HEAD
-import { Entry, Tag, useDiaryStore } from '../store/DiaryStore';
-=======
 import { Tag, useDiaryStore } from '../store/DiaryStore';
->>>>>>> a3c8a209ce26c01074b1273e537dfc569900cbc8
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Button from './Button';
 import { useNavigation } from '@react-navigation/native';
@@ -126,14 +122,9 @@ const VideoList = () => {
                 <TouchableOpacity
                   style={styles.autocompleteButton}
                   onPress={() => {
-<<<<<<< HEAD
                     setFilter(text);
                     setSelectedTag(text);
                     setIsSelected(true);
-=======
-                    setFilter(item.text);
-                    setSelectedTag(item.text);
->>>>>>> a3c8a209ce26c01074b1273e537dfc569900cbc8
                   }}
                 >
                   <Text style={styles.autocompleteText}>{item.text}</Text>
