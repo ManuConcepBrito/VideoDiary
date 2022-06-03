@@ -118,7 +118,7 @@ const VideoList = () => {
             }}
             flatListProps={{
               keyExtractor: (tag: Tag) => tag.id,
-              renderItem: (item: Tag) => (
+              renderItem: ({ item: { text } }: Tag) => (
                 <TouchableOpacity
                   style={styles.autocompleteButton}
                   onPress={() => {
@@ -127,7 +127,7 @@ const VideoList = () => {
                     setIsSelected(true);
                   }}
                 >
-                  <Text style={styles.autocompleteText}>{item.text}</Text>
+                  <Text style={styles.autocompleteText}>{text}</Text>
                   <Icon
                     color={COLORS.grey}
                     name="tag"
