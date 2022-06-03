@@ -41,11 +41,18 @@ type VideoListProps = NativeStackNavigationProp<StackParamList, 'VideoList'>;
 const VideoList = () => {
   const navigation = useNavigation<VideoListProps>();
   const [filter, setFilter] = useState<string>('');
+  const [hideResults, setHideResults] = useState<Boolean>(false);
+  const [selectedTag, setSelectedTag] = useState<string>('');
   const [editTags, setEditTags] = useState<string[]>([]);
   const store = useDiaryStore();
 
   useEffect(() => {
-    store.getFilteredEntries(filter);
+    store.getFilteredEntries(filter.toLowerCase().trim());
+    if (selectedTag === filter) {
+      setHideResults(true);
+    } else {
+      setHideResults(false);
+    }
   }, [filter]);
 
   const SearchTextInput = () => {
@@ -53,15 +60,17 @@ const VideoList = () => {
       <TextInput
         autoCapitalize="none"
         autoCorrect={false}
-        onEndEditing={() =>
-          store.getFilteredEntries(filter.toLowerCase().trim())
-        }
+        onEndEditing={() => {
+          store.getFilteredEntries(filter.toLowerCase().trim());
+          setHideResults(false);
+        }}
         clearButtonMode="always"
         value={filter}
         placeholder="Tags, Days, Dates..."
-        onSubmitEditing={() =>
-          store.getFilteredEntries(filter.toLowerCase().trim())
-        }
+        onSubmitEditing={() => {
+          store.getFilteredEntries(filter.toLowerCase().trim());
+          setHideResults(false);
+        }}
         style={styles.textInput}
         onChangeText={(text) => {
           setFilter(text.toLowerCase());
@@ -109,6 +118,7 @@ const VideoList = () => {
           <Autocomplete
             renderTextInput={SearchTextInput}
             value={filter}
+            hideResults={hideResults}
             autoCorrect={false}
             data={filterTags()}
             listContainerStyle={{
@@ -121,10 +131,19 @@ const VideoList = () => {
               keyExtractor: (tag: Tag) => tag.id,
               renderItem: ({ item: { text } }: Tag) => (
                 <TouchableOpacity
-                  style={styles.autocompleteText}
-                  onPress={() => setFilter(text)}
+                  style={styles.autocompleteButton}
+                  onPress={() => {
+                    setFilter(text);
+                    setSelectedTag(text);
+                  }}
                 >
                   <Text style={styles.autocompleteText}>{text}</Text>
+                  <Icon
+                    color={COLORS.grey}
+                    name="tag"
+                    size={20}
+                    style={{ lineHeight: 20 }}
+                  />
                 </TouchableOpacity>
               ),
             }}
@@ -139,7 +158,6 @@ const VideoList = () => {
               {() => (
                 <TouchableOpacity
                   onPress={() => {
-                    console.log(`Navigating to ${item}`);
                     navigation.navigate('EditVideo', { entry: item });
                   }}
                   style={[
@@ -248,6 +266,11 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 3, height: 3 },
     shadowRadius: 0,
     elevation: 5,
+  },
+  autocompleteButton: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: SPACING.xs,
   },
   autocompleteText: {
     fontFamily: FONTS.bold,
