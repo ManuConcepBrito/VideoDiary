@@ -10,7 +10,6 @@ import {
 } from 'react-native';
 import { COLORS, FONTS, SPACING } from '../res/theme';
 import { Entry, Tag, useDiaryStore } from '../store/DiaryStore';
-import { useDiaryStore } from '../store/DiaryStore';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Button from './Button';
 import { useNavigation } from '@react-navigation/native';
@@ -22,38 +21,28 @@ import { toJS } from 'mobx';
 
 const numColumns = 3;
 
-const tagsTry: Tag[] = [
-  {
-    id: 0,
-    text: 'tag',
-  },
-  {
-    id: 1,
-    text: 'better',
-  },
-  {
-    id: 2,
-    text: 'Sofya',
-  },
-];
-
 type VideoListProps = NativeStackNavigationProp<StackParamList, 'VideoList'>;
 
 const VideoList = () => {
   const navigation = useNavigation<VideoListProps>();
   const [filter, setFilter] = useState<string>('');
-  const [hideResults, setHideResults] = useState<Boolean>(false);
-  const [selectedTag, setSelectedTag] = useState<string>('');
   const [editTags, setEditTags] = useState<string[]>([]);
   const store = useDiaryStore();
 
+  // Autocomplete
+  const [hideResults, setHideResults] = useState<Boolean>(false);
+  const [selectedTag, setSelectedTag] = useState<string>('');
+  const [isSelected, setIsSelected] = useState<Boolean>(false);
+
   useEffect(() => {
     store.getFilteredEntries(filter.toLowerCase().trim());
-    if (selectedTag === filter) {
+    console.log('isSelected', isSelected);
+    if (selectedTag === filter && isSelected) {
       setHideResults(true);
     } else {
       setHideResults(false);
     }
+    setIsSelected(false);
   }, [filter]);
 
   const SearchTextInput = () => {
@@ -136,6 +125,7 @@ const VideoList = () => {
                   onPress={() => {
                     setFilter(text);
                     setSelectedTag(text);
+                    setIsSelected(true);
                   }}
                 >
                   <Text style={styles.autocompleteText}>{text}</Text>

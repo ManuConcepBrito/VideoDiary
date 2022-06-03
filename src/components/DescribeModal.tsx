@@ -19,7 +19,6 @@ import { Entry, Mood, useDiaryStore } from '../store/DiaryStore';
 import Button from './Button';
 import * as MediaLibrary from 'expo-media-library';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import Autocomplete from './Autocomplete';
 
 type DescribeModalProps = NativeStackNavigationProp<
   StackParamList,
@@ -37,20 +36,6 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
   const [tagInput, setTagInput] = React.useState<string>('');
   const [note, setNote] = React.useState<string>('');
   const [mood, setMood] = React.useState<Mood>();
-
-  // autcomplete stuff
-  const [filter, setFilter] = React.useState<string>('');
-  const [hideResults, setHideResults] = React.useState<Boolean>(false);
-  const [selectedTag, setSelectedTag] = React.useState<string>('');
-
-  React.useEffect(() => {
-    store.getFilteredEntries(filter.toLowerCase().trim());
-    if (selectedTag === filter) {
-      setHideResults(true);
-    } else {
-      setHideResults(false);
-    }
-  }, [filter]);
 
   const EnterTagTextInput = () => {
     return (
@@ -136,38 +121,16 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
       </View>
       <Text style={styles.body}>{STRINGS.giveItATag}</Text>
       <View style={styles.textInputContainer}>
-        <Autocomplete
-          renderTextInput={EnterTagTextInput}
-          value={filter}
-          hideResults={hideResults}
+        <BottomSheetTextInput
+          value={tagInput}
+          style={[styles.input, { flex: 0.8 }]}
+          placeholder="Keywords about today..."
+          autoCapitalize="none"
           autoCorrect={false}
-          data={filterTags()}
-          listContainerStyle={{
-            borderWidth: 3,
-            borderTopWidth: 0,
-            marginBottom: 0,
-            borderColor: 'black',
-          }}
-          flatListProps={{
-            keyExtractor: (tag: Tag) => tag.id,
-            renderItem: ({ item: { text } }: Tag) => (
-              <TouchableOpacity
-                style={styles.autocompleteButton}
-                onPress={() => {
-                  setFilter(text);
-                  setSelectedTag(text);
-                }}
-              >
-                <Text style={styles.autocompleteText}>{text}</Text>
-                <Icon
-                  color={COLORS.grey}
-                  name="tag"
-                  size={20}
-                  style={{ lineHeight: 20 }}
-                />
-              </TouchableOpacity>
-            ),
-          }}
+          onEndEditing={() => Keyboard.dismiss()}
+          onChangeText={(input) => updateTag(input)}
+          onSubmitEditing={() => saveTag()}
+          clearButtonMode="always"
         />
         <Button
           style={{
