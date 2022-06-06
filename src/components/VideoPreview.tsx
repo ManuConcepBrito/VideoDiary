@@ -19,7 +19,6 @@ export default function VideoPreview({ uri, style }: VideoPreviewProps) {
       }}
       useNativeControls
       resizeMode={ResizeMode.COVER}
-      isLooping
     />
   );
 }
