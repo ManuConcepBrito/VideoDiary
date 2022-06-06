@@ -71,7 +71,13 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
   };
 
   const addVideo = (uri: string) => {
-    const entry: Entry = { date: new Date(), mood, note, tags, videoURI: uri };
+    const entry: Entry = {
+      dateString: JSON.stringify(new Date()),
+      mood,
+      note,
+      tags,
+      videoURI: uri,
+    };
     store.addEntry(entry);
   };
 
