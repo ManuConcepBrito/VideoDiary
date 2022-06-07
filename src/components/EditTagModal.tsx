@@ -96,6 +96,7 @@ const EditTagModal = ({
       mood,
       tags,
     };
+    console.log(`The edited entry ${editedEntry}`);
     store.removeEntry(entry);
     store.addEntry(editedEntry);
     toggleTagModal();

@@ -1,5 +1,5 @@
 import { BottomSheetTextInput } from '@gorhom/bottom-sheet';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { observer } from 'mobx-react-lite';
 import * as React from 'react';
@@ -7,7 +7,7 @@ import { View, StyleSheet, Text, Keyboard } from 'react-native';
 import { StackParamList } from '../../App';
 import { STRINGS } from '../res/strings';
 import { COLORS, FONTS, SPACING } from '../res/theme';
-import { Entry, Mood, useDiaryStore, Tag } from '../store/DiaryStore';
+import { Entry, Mood, useDiaryStore } from '../store/DiaryStore';
 import Button from './Button';
 import * as MediaLibrary from 'expo-media-library';
 
@@ -15,7 +15,7 @@ type AddNotesProps = NativeStackNavigationProp<StackParamList, 'DescribeVideo'>;
 
 type DescribeVideoProps = {
   uri: string;
-  mood: Mood;
+  mood?: Mood;
   tags: string[];
 };
 
@@ -26,7 +26,13 @@ const AddNotes = ({ uri, mood, tags }: DescribeVideoProps) => {
   const [note, setNote] = React.useState<string>('');
 
   const addVideo = (uri: string) => {
-    const entry: Entry = { date: new Date(), mood, note, tags, videoURI: uri };
+    const entry: Entry = {
+      dateString: JSON.stringify(new Date()),
+      mood,
+      note,
+      tags,
+      videoURI: uri,
+    };
     store.addEntry(entry);
   };
 
