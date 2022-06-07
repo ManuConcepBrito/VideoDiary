@@ -15,13 +15,11 @@ import { StackParamList } from '../../App';
 import { ICONS } from '../res/icons';
 import { STRINGS } from '../res/strings';
 import { COLORS, FONTS, SPACING } from '../res/theme';
-import { Entry, Mood, useDiaryStore, Tag } from '../store/DiaryStore';
+import { Mood, useDiaryStore } from '../store/DiaryStore';
 import Button from './Button';
-import * as MediaLibrary from 'expo-media-library';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Autocomplete from './Autocomplete';
-import AddNotes from './AddNotes';
 
 type DescribeModalProps = NativeStackNavigationProp<
   StackParamList,
@@ -82,11 +80,11 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
       return [];
     }
     const filteredTags = store.tags.filter((tag) =>
-      tag.text.toLowerCase().includes(tagInput.toLowerCase().trim())
+      tag.toLowerCase().includes(tagInput.toLowerCase().trim())
     );
     if (
       filteredTags.length === 1 &&
-      filteredTags[0].text === tagInput.toLowerCase().trim()
+      filteredTags[0] === tagInput.toLowerCase().trim()
     ) {
       return [];
     }
@@ -155,26 +153,29 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
               marginBottom: 0,
               borderColor: 'black',
             }}
+            keyExtractor={(_: string, index: number) => index.toString()}
             flatListProps={{
-              keyExtractor: (tag: Tag) => tag.id,
-              renderItem: ({ item: { text } }: Tag) => (
-                <TouchableOpacity
-                  style={styles.autocompleteButton}
-                  onPress={() => {
-                    updateTag(text);
-                    setSelectedTag(text);
-                    setIsSelected(true);
-                  }}
-                >
-                  <Text style={styles.autocompleteText}>{text}</Text>
-                  <Icon
-                    color={COLORS.grey}
-                    name="tag"
-                    size={20}
-                    style={{ lineHeight: 20 }}
-                  />
-                </TouchableOpacity>
-              ),
+              renderItem: (item: any) => {
+                const tag = item.item;
+                return (
+                  <TouchableOpacity
+                    style={styles.autocompleteButton}
+                    onPress={() => {
+                      updateTag(tag);
+                      setSelectedTag(tag);
+                      setIsSelected(true);
+                    }}
+                  >
+                    <Text style={styles.autocompleteText}>{tag}</Text>
+                    <Icon
+                      color={COLORS.grey}
+                      name="tag"
+                      size={20}
+                      style={{ lineHeight: 20 }}
+                    />
+                  </TouchableOpacity>
+                );
+              },
             }}
           />
           <Button

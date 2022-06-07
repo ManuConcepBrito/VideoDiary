@@ -16,7 +16,7 @@ export type StackParamList = {
   VideoList: undefined;
   CameraScreen: undefined;
   DescribeVideo: { uri: string };
-  DescribeVideoAddNotes: { uri: string; mood: Mood; tags: string[] };
+  DescribeVideoAddNotes: { uri: string; mood?: Mood; tags: string[] };
   EditVideo: { entry: Entry };
 };
 
