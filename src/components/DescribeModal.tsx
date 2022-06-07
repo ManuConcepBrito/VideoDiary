@@ -15,10 +15,13 @@ import { StackParamList } from '../../App';
 import { ICONS } from '../res/icons';
 import { STRINGS } from '../res/strings';
 import { COLORS, FONTS, SPACING } from '../res/theme';
-import { Entry, Mood, useDiaryStore } from '../store/DiaryStore';
+import { Entry, Mood, useDiaryStore, Tag } from '../store/DiaryStore';
 import Button from './Button';
 import * as MediaLibrary from 'expo-media-library';
 import Icon from 'react-native-vector-icons/FontAwesome';
+
+import Autocomplete from './Autocomplete';
+import AddNotes from './AddNotes';
 
 type DescribeModalProps = NativeStackNavigationProp<
   StackParamList,
@@ -37,26 +40,61 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
   const [note, setNote] = React.useState<string>('');
   const [mood, setMood] = React.useState<Mood>();
 
+  // autocomplete
+  const [selectedTag, setSelectedTag] = React.useState<string>('');
+  const [isSelected, setIsSelected] = React.useState<Boolean>(false);
+  const [isFocused, setIsFocused] = React.useState<Boolean>(false);
+
+  React.useEffect(() => {
+    store.getFilteredEntries(tagInput.toLowerCase().trim());
+    console.log('isSelected', isSelected);
+    if ((selectedTag !== '' || tagInput !== '') && selectedTag === tagInput) {
+      setIsSelected(true);
+    } else {
+      setIsSelected(false);
+    }
+  }, [tagInput]);
+
   const EnterTagTextInput = () => {
     return (
       <BottomSheetTextInput
-        value={note}
-        multiline
-        blurOnSubmit
+        value={tagInput}
+        style={[styles.tagInput]}
         placeholder="Keywords about today..."
         autoCapitalize="none"
         autoCorrect={false}
-        onEndEditing={() => Keyboard.dismiss()}
-        onChangeText={(input) => setNote(input)}
-        onSubmitEditing={() => setNote(note)}
+        onEndEditing={() => {
+          Keyboard.dismiss();
+          setIsSelected(false);
+        }}
+        onChangeText={(input) => updateTag(input)}
+        onSubmitEditing={() => {
+          saveTag();
+          setIsSelected(false);
+        }}
         clearButtonMode="always"
-        style={styles.input}
       />
     );
   };
 
+  const filterTags = () => {
+    if (tagInput === '') {
+      return [];
+    }
+    const filteredTags = store.tags.filter((tag) =>
+      tag.text.toLowerCase().includes(tagInput.toLowerCase().trim())
+    );
+    if (
+      filteredTags.length === 1 &&
+      filteredTags[0].text === tagInput.toLowerCase().trim()
+    ) {
+      return [];
+    }
+    return filteredTags;
+  };
+
   const updateTag = (input: string) => {
-    const formattedTag = input.toLowerCase();
+    const formattedTag = input.toLowerCase().trim();
     setTagInput(formattedTag);
   };
 
@@ -68,23 +106,6 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
     setTags((tags) => [...tags, tagInput.trim()]);
     setTagInput('');
     Keyboard.dismiss();
-  };
-
-  const addVideo = (uri: string) => {
-    const entry: Entry = { date: new Date(), mood, note, tags, videoURI: uri };
-    store.addEntry(entry);
-  };
-
-  const saveToLocalAlbum = async (videoUri: string) => {
-    // create asset
-    const videoAsset = await MediaLibrary.createAssetAsync(videoUri);
-    // check if album exists otherwise create it
-    let album = await MediaLibrary.getAlbumAsync('VideoDiary');
-    if (!album) {
-      await MediaLibrary.createAlbumAsync('VideoDiary', videoAsset);
-    } else {
-      await MediaLibrary.addAssetsToAlbumAsync(videoAsset, album);
-    }
   };
 
   return (
@@ -119,67 +140,80 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
           <Image style={styles.emoji} source={ICONS.happyIcon} />
         </TouchableOpacity>
       </View>
-      <Text style={styles.body}>{STRINGS.giveItATag}</Text>
-      <View style={styles.textInputContainer}>
-        <BottomSheetTextInput
-          value={tagInput}
-          style={[styles.input, { flex: 0.8 }]}
-          placeholder="Keywords about today..."
-          autoCapitalize="none"
-          autoCorrect={false}
-          onEndEditing={() => Keyboard.dismiss()}
-          onChangeText={(input) => updateTag(input)}
-          onSubmitEditing={() => saveTag()}
-          clearButtonMode="always"
-        />
-        <Button
-          style={{
-            backgroundColor: COLORS.blue,
-            marginLeft: SPACING.xs,
-            flex: 0.2,
-          }}
-          onPress={() => saveTag()}
-          icon={<Icon color={COLORS.white} name="arrow-right" size={20} />}
-        ></Button>
-      </View>
-      <Text style={styles.body}>{STRINGS.notes}</Text>
-      <View style={styles.notesContainer}>
-        <BottomSheetTextInput
-          value={note}
-          multiline
-          blurOnSubmit
-          placeholder="Keywords about today..."
-          autoCapitalize="none"
-          autoCorrect={false}
-          onEndEditing={() => Keyboard.dismiss()}
-          onChangeText={(input) => setNote(input)}
-          onSubmitEditing={() => setNote(note)}
-          clearButtonMode="always"
-          style={styles.input}
-        />
+      <View style={styles.tagContainer}>
+        <Text style={styles.body}>{STRINGS.giveItATag}</Text>
+        <View style={styles.textInputContainer}>
+          <Autocomplete
+            renderTextInput={EnterTagTextInput}
+            value={tagInput}
+            hideResults={isSelected}
+            autoCorrect={false}
+            data={filterTags()}
+            listContainerStyle={{
+              borderWidth: 3,
+              borderTopWidth: 0,
+              marginBottom: 0,
+              borderColor: 'black',
+            }}
+            flatListProps={{
+              keyExtractor: (tag: Tag) => tag.id,
+              renderItem: ({ item: { text } }: Tag) => (
+                <TouchableOpacity
+                  style={styles.autocompleteButton}
+                  onPress={() => {
+                    updateTag(text);
+                    setSelectedTag(text);
+                    setIsSelected(true);
+                  }}
+                >
+                  <Text style={styles.autocompleteText}>{text}</Text>
+                  <Icon
+                    color={COLORS.grey}
+                    name="tag"
+                    size={20}
+                    style={{ lineHeight: 20 }}
+                  />
+                </TouchableOpacity>
+              ),
+            }}
+          />
+          <Button
+            style={{
+              backgroundColor: COLORS.blue,
+              marginLeft: SPACING.xs,
+              zIndex: 1,
+              flex: 1,
+              height: 50,
+            }}
+            onPress={() => saveTag()}
+            icon={<Icon color={COLORS.white} name="arrow-right" size={20} />}
+          ></Button>
+        </View>
       </View>
       <View style={styles.finishButtonContainer}>
         <Button
           style={{
-            flex: 0.5,
             backgroundColor: COLORS.red,
             paddingVertical: SPACING.m,
             marginRight: SPACING.s,
+            flex: 1,
           }}
           title="Cancel"
           onPress={() => navigation.goBack()}
         ></Button>
         <Button
           style={{
-            flex: 0.5,
-            backgroundColor: COLORS.black,
+            backgroundColor: COLORS.yellow,
             paddingVertical: SPACING.m,
+            flex: 1,
           }}
-          title="Finish"
+          title="Next"
           onPress={() => {
-            addVideo(uri);
-            saveToLocalAlbum(uri);
-            navigation.navigate('VideoList');
+            navigation.navigate('DescribeVideoAddNotes', {
+              uri: uri,
+              mood: mood,
+              tags: tags,
+            });
           }}
         ></Button>
       </View>
@@ -190,25 +224,25 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
 // stylesheet for container
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     paddingBottom: SPACING.l,
+    flex: 1,
+    flexGrow: 1,
   },
   emojiContainer: {
-    flex: 0.2,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
     marginTop: SPACING.xl,
     marginBottom: SPACING.xl,
   },
+  tagContainer: {},
   textInputContainer: {
     flexDirection: 'row',
-    flex: 0.5,
     marginBottom: SPACING.s,
     backgroundColor: COLORS.white,
   },
-  input: {
-    flex: 1,
+  tagInput: {
+    minWidth: '80%',
     borderWidth: 3,
     borderColor: COLORS.black,
     paddingVertical: SPACING.xs,
@@ -222,20 +256,14 @@ const styles = StyleSheet.create({
     shadowRadius: 0,
     elevation: 5,
   },
-  notesContainer: {
-    marginBottom: SPACING.s,
-    flex: 2,
-    backgroundColor: COLORS.white,
-    shadowColor: COLORS.grey,
-    shadowOpacity: 1,
-    shadowOffset: { width: 3, height: 3 },
-    shadowRadius: 0,
-    elevation: 5,
+  arrowButton: {
+    minWidth: '20%',
   },
   finishButtonContainer: {
+    flex: 1,
+    backgroundColor: COLORS.white,
     flexDirection: 'row',
     alignItems: 'center',
-    flex: 1,
   },
   body: {
     fontFamily: FONTS.bold,
@@ -250,6 +278,15 @@ const styles = StyleSheet.create({
   arrow: {
     height: 23,
     width: 33,
+  },
+  autocompleteButton: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    padding: SPACING.xs,
+  },
+  autocompleteText: {
+    fontFamily: FONTS.bold,
+    fontSize: 20,
   },
 });
 

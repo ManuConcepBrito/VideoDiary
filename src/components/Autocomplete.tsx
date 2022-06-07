@@ -8,8 +8,11 @@ import {
   TextInput,
   View,
 } from 'react-native';
+import { Entry, Mood, useDiaryStore, Tag } from '../store/DiaryStore';
 
 export const AutocompleteInput = (props) => {
+  const store = useDiaryStore();
+
   function renderResultList() {
     const { renderResultList: renderFunction, style } = props;
     const listProps = {
@@ -44,6 +47,7 @@ export const AutocompleteInput = (props) => {
   } = props;
 
   const showResults = data.length > 0;
+
   // Notify listener if the suggestion will be shown.
   onShowResults && onShowResults(showResults);
   return (
@@ -159,11 +163,6 @@ const iosStyles = {
   inputContainer: {
     ...border,
   },
-  input: {
-    backgroundColor: 'white',
-    height: 40,
-    paddingLeft: 3,
-  },
   list: {
     borderWidth: 2,
     borderColor: 'black',
@@ -178,8 +177,6 @@ const iosStyles = {
 const styles = StyleSheet.create({
   input: {
     backgroundColor: 'white',
-    height: 40,
-    paddingLeft: 3,
   },
   ...Platform.select({
     android: androidStyles,

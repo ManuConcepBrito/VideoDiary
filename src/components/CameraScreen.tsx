@@ -14,6 +14,7 @@ import { COLORS, FONTS } from '../res/theme';
 import { ICONS } from '../res/icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamList } from '../../App';
+import DescribeModal from './DescribeModal';
 import * as MediaLibrary from 'expo-media-library';
 
 type CameraScreenProps = NativeStackNavigationProp<
@@ -40,7 +41,9 @@ function CameraScreen() {
   const isFocused = useIsFocused();
   React.useEffect(() => {
     if (videoUri !== null) {
-      navigation.navigate('DescribeVideo', { uri: videoUri });
+      navigation.navigate('DescribeVideo', {
+        uri: videoUri,
+      });
     }
   }, [videoUri]);
 
@@ -85,6 +88,7 @@ function CameraScreen() {
     const cameraPermission = await Camera.requestCameraPermissionsAsync();
     const audioPermission = await Camera.requestMicrophonePermissionsAsync();
     let savingPermission = await MediaLibrary.getPermissionsAsync();
+    console.log('savingPermission', savingPermission);
     if (savingPermission.accessPrivileges !== 'all') {
       savingPermission = await MediaLibrary.requestPermissionsAsync();
     }

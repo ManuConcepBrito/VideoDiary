@@ -29,19 +29,16 @@ const VideoList = () => {
   const store = useDiaryStore();
 
   // Autocomplete
-  const [hideResults, setHideResults] = useState<Boolean>(false);
   const [selectedTag, setSelectedTag] = useState<string>('');
   const [isSelected, setIsSelected] = useState<Boolean>(false);
 
   useEffect(() => {
     store.getFilteredEntries(filter.toLowerCase().trim());
-    console.log('isSelected', isSelected);
-    if (selectedTag === filter && isSelected) {
-      setHideResults(true);
+    if (selectedTag === filter) {
+      setIsSelected(true);
     } else {
-      setHideResults(false);
+      setIsSelected(false);
     }
-    setIsSelected(false);
   }, [filter]);
 
   const SearchTextInput = () => {
@@ -51,18 +48,18 @@ const VideoList = () => {
         autoCorrect={false}
         onEndEditing={() => {
           store.getFilteredEntries(filter.toLowerCase().trim());
-          setHideResults(false);
+          setIsSelected(false);
         }}
         clearButtonMode="always"
         value={filter}
         placeholder="Tags, Days, Dates..."
         onSubmitEditing={() => {
           store.getFilteredEntries(filter.toLowerCase().trim());
-          setHideResults(false);
+          setIsSelected(false);
         }}
         style={styles.textInput}
         onChangeText={(text) => {
-          setFilter(text.toLowerCase());
+          setFilter(text.toLowerCase().trim());
         }}
       />
     );
@@ -107,7 +104,7 @@ const VideoList = () => {
           <Autocomplete
             renderTextInput={SearchTextInput}
             value={filter}
-            hideResults={hideResults}
+            hideResults={isSelected}
             autoCorrect={false}
             data={filterTags()}
             listContainerStyle={{
@@ -115,7 +112,9 @@ const VideoList = () => {
               borderTopWidth: 0,
               marginBottom: 0,
               borderColor: 'black',
+              zIndex: 1,
             }}
+            listStyle={{ zIndex: 1 }}
             flatListProps={{
               keyExtractor: (tag: Tag) => tag.id,
               renderItem: ({ item: { text } }: Tag) => (
@@ -258,6 +257,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   autocompleteButton: {
+    flex: 1,
+    zIndex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: SPACING.xs,
