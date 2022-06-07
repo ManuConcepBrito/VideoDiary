@@ -2,6 +2,7 @@
   "expo": {
     "name": "Lumen",
     "slug": "lumen",
+    "owner": "cotidio",
     "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -29,15 +30,18 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": [
-      [
-        "expo-media-library",
+    "plugins": ["sentry-expo"],
+    "hooks": {
+      "postPublish": [
         {
-          "photosPermission": "Allow VideoDiary to access your photos.",
-          "savePhotosPermission": "Allow VideoDiary to save photos.",
-          "isAccessMediaLocationEnabled": true
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "cotidio",
+            "project": "lumen",
+            "authToken": "c67d89c61c4f439bb1278ecb2e69090febc40892c8a74e3b9723abab1b2910dc"
+          }
         }
       ]
-    ]
+    }
   }
 }
