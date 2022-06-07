@@ -6,10 +6,10 @@ import { COLORS, SPACING } from '../res/theme';
 import VideoPreview from './VideoPreview';
 import BottomSheet from '@gorhom/bottom-sheet';
 import { useMemo } from 'react';
-import DescribeModal from './DescribeModal';
+import AddNotes from './AddNotes';
 
-const DescribeVideo = () => {
-  const route = useRoute<RouteProp<StackParamList, 'DescribeVideo'>>();
+const DescribeVideoAddNotes = () => {
+  const route = useRoute<RouteProp<StackParamList, 'DescribeVideoAddNotes'>>();
 
   // variables
   const snapPoints = useMemo(() => ['10%', '70%'], []);
@@ -28,8 +28,11 @@ const DescribeVideo = () => {
         keyboardBehavior="interactive"
         keyboardBlurBehavior="restore"
       >
-        {/* either tags or notes entering */}
-        <DescribeModal uri={route.params.uri} />
+        <AddNotes
+          uri={route.params.uri}
+          mood={route.params.mood}
+          tags={route.params.tags}
+        />
       </BottomSheet>
     </View>
   );
@@ -44,4 +47,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DescribeVideo;
+export default DescribeVideoAddNotes;

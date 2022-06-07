@@ -9,7 +9,7 @@ import {
   View,
 } from 'react-native';
 import { COLORS, FONTS, SPACING } from '../res/theme';
-import { Tag, useDiaryStore } from '../store/DiaryStore';
+import { useDiaryStore } from '../store/DiaryStore';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Button from './Button';
 import { useNavigation } from '@react-navigation/native';
@@ -29,19 +29,16 @@ const VideoList = () => {
   const store = useDiaryStore();
 
   // Autocomplete
-  const [hideResults, setHideResults] = useState<Boolean>(false);
   const [selectedTag, setSelectedTag] = useState<string>('');
   const [isSelected, setIsSelected] = useState<Boolean>(false);
 
   useEffect(() => {
     store.getFilteredEntries(filter.toLowerCase().trim());
-    console.log('isSelected', isSelected);
-    if (selectedTag === filter && isSelected) {
-      setHideResults(true);
+    if (selectedTag === filter) {
+      setIsSelected(true);
     } else {
-      setHideResults(false);
+      setIsSelected(false);
     }
-    setIsSelected(false);
   }, [filter]);
 
   const SearchTextInput = () => {
@@ -51,18 +48,18 @@ const VideoList = () => {
         autoCorrect={false}
         onEndEditing={() => {
           store.getFilteredEntries(filter.toLowerCase().trim());
-          setHideResults(false);
+          setIsSelected(false);
         }}
         clearButtonMode="always"
         value={filter}
         placeholder="Tags, Days, Dates..."
         onSubmitEditing={() => {
           store.getFilteredEntries(filter.toLowerCase().trim());
-          setHideResults(false);
+          setIsSelected(false);
         }}
         style={styles.textInput}
         onChangeText={(text) => {
-          setFilter(text.toLowerCase());
+          setFilter(text.toLowerCase().trim());
         }}
       />
     );
@@ -109,7 +106,7 @@ const VideoList = () => {
           <Autocomplete
             renderTextInput={SearchTextInput}
             value={filter}
-            hideResults={hideResults}
+            hideResults={isSelected}
             autoCorrect={false}
             data={filterTags()}
             listContainerStyle={{
@@ -117,7 +114,9 @@ const VideoList = () => {
               borderTopWidth: 0,
               marginBottom: 0,
               borderColor: 'black',
+              zIndex: 1,
             }}
+            listStyle={{ zIndex: 1 }}
             keyExtractor={(_: string, index: number) => index.toString()}
             flatListProps={{
               renderItem: (item: any) => {
@@ -262,6 +261,8 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   autocompleteButton: {
+    flex: 1,
+    zIndex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: SPACING.xs,
