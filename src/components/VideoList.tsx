@@ -69,14 +69,16 @@ const VideoList = () => {
       return [];
     }
     const filteredTags = store.tags.filter((tag) =>
-      tag.text.toLowerCase().includes(filter.toLowerCase().trim())
+      tag.toLowerCase().includes(filter.toLowerCase().trim())
     );
     if (
       filteredTags.length === 1 &&
-      filteredTags[0].text === filter.toLowerCase().trim()
+      filteredTags[0] === filter.toLowerCase().trim()
     ) {
       return [];
     }
+
+    console.log(filteredTags);
     return filteredTags;
   };
 
@@ -115,26 +117,29 @@ const VideoList = () => {
               zIndex: 1,
             }}
             listStyle={{ zIndex: 1 }}
+            keyExtractor={(_: string, index: number) => index.toString()}
             flatListProps={{
-              keyExtractor: (tag: Tag) => tag.id,
-              renderItem: ({ item: { text } }: Tag) => (
-                <TouchableOpacity
-                  style={styles.autocompleteButton}
-                  onPress={() => {
-                    setFilter(text);
-                    setSelectedTag(text);
-                    setIsSelected(true);
-                  }}
-                >
-                  <Text style={styles.autocompleteText}>{text}</Text>
-                  <Icon
-                    color={COLORS.grey}
-                    name="tag"
-                    size={20}
-                    style={{ lineHeight: 20 }}
-                  />
-                </TouchableOpacity>
-              ),
+              renderItem: (item: any) => {
+                const tag = item.item;
+                return (
+                  <TouchableOpacity
+                    style={styles.autocompleteButton}
+                    onPress={() => {
+                      setFilter(tag);
+                      setSelectedTag(tag);
+                      setIsSelected(true);
+                    }}
+                  >
+                    <Text style={styles.autocompleteText}>{tag}</Text>
+                    <Icon
+                      color={COLORS.grey}
+                      name="tag"
+                      size={20}
+                      style={{ lineHeight: 20 }}
+                    />
+                  </TouchableOpacity>
+                );
+              },
             }}
           />
         </View>
@@ -142,6 +147,7 @@ const VideoList = () => {
       <FlatList
         data={store.filteredEntries.slice()}
         renderItem={({ item }) => {
+          const date = new Date(JSON.parse(item.dateString));
           return (
             <Observer>
               {() => (
@@ -151,17 +157,15 @@ const VideoList = () => {
                   }}
                   style={[
                     styles.card,
-                    cardStyleMap[
-                      Number(item.date.getMilliseconds()) % numColumns
-                    ],
+                    cardStyleMap[Number(date.getMilliseconds()) % numColumns],
                   ]}
                 >
                   <Text style={styles.body}>
-                    {item.date.toLocaleString('default', { weekday: 'short' })}
+                    {date.toLocaleString('default', { weekday: 'short' })}
                   </Text>
                   <Text style={styles.body}>
-                    {item.date.toLocaleString('default', { month: 'short' })}{' '}
-                    {item.date.getDate()}
+                    {date.toLocaleString('default', { month: 'short' })}{' '}
+                    {date.getDate()}
                   </Text>
                 </TouchableOpacity>
               )}

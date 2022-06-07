@@ -1,16 +1,14 @@
-import { action, autorun, computed, makeObservable, observable } from 'mobx';
+import { action, computed, makeObservable, observable } from 'mobx';
+import { makePersistable } from 'mobx-persist-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import React from 'react';
 
 export interface Entry {
-  date: Date;
+  dateString: string;
   videoURI: string;
   mood?: Mood;
   note?: string;
   tags?: string[];
-}
-export interface Tag {
-  text: string;
-  id: number;
 }
 
 export enum Mood {
@@ -22,32 +20,31 @@ export enum Mood {
 export class DiaryStore {
   entries: Entry[] = [];
   filteredEntries: Entry[] = [];
-  // use tagSet cause lookup is O(1) but tags object bc RN Flatlist are stupid
-  tagsSet = new Set();
-  tags: Tag[] = [];
+  tags: string[] = [];
 
   constructor() {
     makeObservable(this, {
       entries: observable,
       filteredEntries: observable,
-      tagsSet: observable,
       tags: observable,
       addEntry: action,
       removeEntry: action,
       sortedEntries: computed,
       getFilteredEntries: action,
     });
+
+    makePersistable(this, {
+      name: 'DiaryStore',
+      properties: ['entries', 'filteredEntries', 'tags'],
+      storage: AsyncStorage,
+    });
   }
 
   addEntry = (entry: Entry) => {
     this.entries.push(entry);
-    const { tags } = entry;
-    tags?.forEach((tag, index) => {
-      if (!this.tagsSet.has(tag)) {
-        this.tagsSet.add(tag);
-        let id = this.tags.length;
-        this.tags.push({ text: tag, id: id });
-        console.log(this.tags);
+    entry.tags?.map((tag) => {
+      if (!this.tags.includes(tag)) {
+        this.tags.push(tag);
       }
     });
     this.filteredEntries = this.sortedEntries;
@@ -55,7 +52,7 @@ export class DiaryStore {
 
   removeEntry = (entry: Entry) => {
     const filteredEntries = this.entries.filter(
-      (item) => item.date !== entry.date
+      (item) => item.dateString !== entry.dateString
     );
     this.entries = filteredEntries;
     this.filteredEntries = this.sortedEntries;
@@ -79,12 +76,16 @@ export class DiaryStore {
     } else {
       return this.entries
         .slice()
-        .sort((a, b) => b.date.getTime() - a.date.getTime());
+        .sort(
+          (a, b) =>
+            new Date(b.dateString).getTime() - new Date(a.dateString).getTime()
+        );
     }
   }
 }
 
-const containsDate = ({ date }: Entry, query: string) => {
+const containsDate = ({ dateString }: Entry, query: string) => {
+  const date = new Date(dateString);
   if (
     date
       .toLocaleString('default', { month: 'long' })
@@ -107,8 +108,8 @@ const containsTag = ({ tags }: Entry, tagQuery: string) => {
   if (tags?.length === 0) {
     return false;
   } else {
-    let filteredTags = tags.filter((tag) => tag.includes(tagQuery));
-    if (filteredTags.length === 0) {
+    let filteredTags = tags?.filter((tag) => tag.includes(tagQuery));
+    if (filteredTags?.length === 0) {
       return false;
     } else {
       return true;
