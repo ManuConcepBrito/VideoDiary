@@ -64,6 +64,7 @@ export class DiaryStore {
     if (filter === '') {
       this.filteredEntries = sortedEntries;
     } else {
+      console.log('filtered entries', this.filteredEntries);
       this.filteredEntries = sortedEntries.filter((entry) => {
         return containsDate(entry, filter) || containsTag(entry, filter);
       });
