@@ -7,7 +7,6 @@ import VideoList from './src/components/VideoList';
 import CameraScreen from './src/components/CameraScreen';
 import DescribeVideo from './src/components/DescribeVideo';
 import DescribeVideoAddNotes from './src/components/DescribeVideoAddNotes';
-import AddNotes from './src/components/AddNotes';
 import { Entry, Mood } from './src/store/DiaryStore';
 import EditVideo from './src/components/EditVideo';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
@@ -16,6 +15,7 @@ import * as Sentry from 'sentry-expo';
 Sentry.init({
   dsn: 'https://ce22889f23a349a3a074aa325f901e11@o1278860.ingest.sentry.io/6478871',
   enableInExpoDevelopment: true,
+  enableNative: true,
   debug: true, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
 });
 

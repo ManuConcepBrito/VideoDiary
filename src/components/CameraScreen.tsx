@@ -8,13 +8,12 @@ import {
   View,
   Text,
 } from 'react-native';
-import { useIsFocused, useNavigation } from '@react-navigation/native';
-import { Camera, CameraRecordingOptions } from 'expo-camera';
+import { useNavigation } from '@react-navigation/native';
+import { Camera, CameraRecordingOptions, CameraType } from 'expo-camera';
 import { COLORS, FONTS } from '../res/theme';
 import { ICONS } from '../res/icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamList } from '../../App';
-import DescribeModal from './DescribeModal';
 import * as MediaLibrary from 'expo-media-library';
 
 type CameraScreenProps = NativeStackNavigationProp<
@@ -24,23 +23,17 @@ type CameraScreenProps = NativeStackNavigationProp<
 
 // functional componenent using expo camera
 function CameraScreen() {
-  const cameraRef = React.useRef(null);
-  const options: CameraRecordingOptions = {
-    mirror: false,
-  };
+  const cameraRef = React.useRef<Camera>(null);
   const navigation = useNavigation<CameraScreenProps>();
-  const [videoUri, setVideoUri] = React.useState(null);
-  // track recording button state
-  const [recording, setRecording] = React.useState(false);
+  const [videoUri, setVideoUri] = React.useState<string>('');
   const latestRecordingValue = React.useRef(false);
+
   const scaleRedCircle = new Animated.Value(1);
   const animatedScaleStyle = {
     transform: [{ scale: scaleRedCircle }],
   };
-  // navigate when videoUri is set
-  const isFocused = useIsFocused();
   React.useEffect(() => {
-    if (videoUri !== null) {
+    if (videoUri !== '') {
       navigation.navigate('DescribeVideo', {
         uri: videoUri,
       });
@@ -63,26 +56,36 @@ function CameraScreen() {
     }
   };
 
-  const record = async (finished) => {
-    if (finished) {
+  const record = async (finished: boolean) => {
+    const options: CameraRecordingOptions = {
+      mirror: false,
+    };
+
+    if (
+      cameraRef &&
+      cameraRef.current &&
+      cameraRef.current._cameraRef &&
+      finished
+    ) {
       const video = await cameraRef.current.recordAsync(options);
       setVideoUri(video.uri);
     }
   };
 
-  const stopRecording = async (finished) => {
-    if (finished) {
+  const stopRecording = async (finished: boolean) => {
+    if (
+      cameraRef &&
+      cameraRef.current &&
+      cameraRef.current._cameraRef &&
+      finished
+    ) {
       cameraRef.current.stopRecording();
     }
   };
 
-  // const isFocused = useIsFocused();
-  // if (!isFocused) {
-  //   return null;
-  // }
   // get permissions if needed
-  const [hasPermission, setHasPermission] = React.useState(null);
-  const [type, setType] = React.useState(Camera.Constants.Type.front);
+  const [hasPermission, setHasPermission] = React.useState<boolean>(false);
+  const [type, setType] = React.useState<CameraType>(CameraType.front);
 
   const askPermissionsAsync = async () => {
     const cameraPermission = await Camera.requestCameraPermissionsAsync();
@@ -117,7 +120,6 @@ function CameraScreen() {
   if (hasPermission === false) {
     return <Text style={styles.body}></Text>;
   }
-
   return (
     <View style={styles.container}>
       <Camera style={styles.camera} type={type} ref={cameraRef}>
@@ -126,9 +128,7 @@ function CameraScreen() {
             style={styles.button}
             onPress={() => {
               setType(
-                type === Camera.Constants.Type.back
-                  ? Camera.Constants.Type.front
-                  : Camera.Constants.Type.back
+                type === CameraType.front ? CameraType.front : CameraType.back
               );
             }}
           >
