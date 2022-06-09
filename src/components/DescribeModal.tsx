@@ -101,9 +101,31 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
       alert('Please enter a tag!');
       return;
     }
+    console.log('Saving tag', tagInput);
     setTags((tags) => [...tags, tagInput.trim()]);
     setTagInput('');
     Keyboard.dismiss();
+  };
+
+  const navigateToSecondDescribePage = () => {
+    if (typeof mood === 'undefined') {
+      alert('Please enter your mood!');
+      return;
+    }
+    // do not use saveTag as that's async and it will not save the tag
+    if (tagInput !== '') {
+      navigation.navigate('DescribeVideoAddNotes', {
+        uri: uri,
+        mood: mood,
+        tags: [...tags, tagInput.trim()],
+      });
+    } else {
+      navigation.navigate('DescribeVideoAddNotes', {
+        uri: uri,
+        mood: mood,
+        tags: tags,
+      });
+    }
   };
 
   return (
@@ -210,17 +232,7 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
           }}
           title="Next"
           onPress={() => {
-            console.log('mood', mood);
-            if (typeof mood === 'undefined') {
-              alert('Please enter your mood!');
-              return;
-            } else {
-              navigation.navigate('DescribeVideoAddNotes', {
-                uri: uri,
-                mood: mood,
-                tags: tags,
-              });
-            }
+            navigateToSecondDescribePage();
           }}
         ></Button>
       </View>
