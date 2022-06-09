@@ -15,7 +15,6 @@ import * as Sentry from 'sentry-expo';
 Sentry.init({
   dsn: 'https://ce22889f23a349a3a074aa325f901e11@o1278860.ingest.sentry.io/6478871',
   enableInExpoDevelopment: true,
-  enableNative: true,
   debug: true, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
 });
 

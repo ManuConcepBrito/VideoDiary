@@ -16,6 +16,11 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamList } from '../../App';
 import * as MediaLibrary from 'expo-media-library';
 
+enum CameraPermission {
+  GRANTED,
+  DENIED,
+}
+
 type CameraScreenProps = NativeStackNavigationProp<
   StackParamList,
   'CameraScreen'
@@ -26,12 +31,20 @@ function CameraScreen() {
   const cameraRef = React.useRef<Camera>(null);
   const navigation = useNavigation<CameraScreenProps>();
   const [videoUri, setVideoUri] = React.useState<string>('');
+  let [mediaLibraryPermission, requestPermission] =
+    MediaLibrary.usePermissions();
   const latestRecordingValue = React.useRef(false);
 
+  // get permissions if needed
+  const [hasPermission, setHasPermission] = React.useState<boolean>(false);
+  const [type, setType] = React.useState<CameraType>(CameraType.front);
+
+  // animations
   const scaleRedCircle = new Animated.Value(1);
   const animatedScaleStyle = {
     transform: [{ scale: scaleRedCircle }],
   };
+
   React.useEffect(() => {
     if (videoUri !== '') {
       navigation.navigate('DescribeVideo', {
@@ -39,6 +52,13 @@ function CameraScreen() {
       });
     }
   }, [videoUri]);
+
+  React.useEffect(() => {
+    (async () => {
+      const status = await askPermissionsAsync();
+      setHasPermission(status === CameraPermission.GRANTED);
+    })();
+  }, []);
 
   const onPressRecording = async () => {
     if (!latestRecordingValue.current) {
@@ -83,36 +103,24 @@ function CameraScreen() {
     }
   };
 
-  // get permissions if needed
-  const [hasPermission, setHasPermission] = React.useState<boolean>(false);
-  const [type, setType] = React.useState<CameraType>(CameraType.front);
-
-  const askPermissionsAsync = async () => {
+  const askPermissionsAsync = async (): Promise<CameraPermission> => {
     const cameraPermission = await Camera.requestCameraPermissionsAsync();
     const audioPermission = await Camera.requestMicrophonePermissionsAsync();
-    let savingPermission = await MediaLibrary.getPermissionsAsync();
-    console.log('savingPermission', savingPermission);
-    if (savingPermission.accessPrivileges !== 'all') {
-      savingPermission = await MediaLibrary.requestPermissionsAsync();
+    if (mediaLibraryPermission?.accessPrivileges !== 'all') {
+      mediaLibraryPermission = await requestPermission();
     }
 
     // check both permissions are granted
     if (
-      cameraPermission.status === 'granted' &&
-      audioPermission.status === 'granted'
+      cameraPermission.granted &&
+      audioPermission.granted &&
+      mediaLibraryPermission.granted
     ) {
-      return 'granted';
+      return CameraPermission.GRANTED;
     } else {
-      return 'denied';
+      return CameraPermission.DENIED;
     }
   };
-
-  React.useEffect(() => {
-    (async () => {
-      const status = await askPermissionsAsync();
-      setHasPermission(status === 'granted');
-    })();
-  }, []);
 
   if (hasPermission === null) {
     return <View />;
