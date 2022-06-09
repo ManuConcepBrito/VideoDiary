@@ -7,7 +7,6 @@ import VideoList from './src/components/VideoList';
 import CameraScreen from './src/components/CameraScreen';
 import DescribeVideo from './src/components/DescribeVideo';
 import DescribeVideoAddNotes from './src/components/DescribeVideoAddNotes';
-import AddNotes from './src/components/AddNotes';
 import { Entry, Mood } from './src/store/DiaryStore';
 import EditVideo from './src/components/EditVideo';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
