@@ -155,10 +155,7 @@ const VideoList = () => {
                   onPress={() => {
                     navigation.navigate('EditVideo', { entry: item });
                   }}
-                  style={[
-                    styles.card,
-                    cardStyleMap[Number(date.getMilliseconds()) % numColumns],
-                  ]}
+                  style={[styles.card, cardStyleMap[item.mood]]}
                 >
                   <Text style={styles.body}>
                     {date.toLocaleString('default', { weekday: 'short' })}
@@ -274,8 +271,8 @@ const styles = StyleSheet.create({
 });
 
 const cardStyleMap: any = {
-  '0': styles.cardBlue,
-  '1': styles.cardYellow,
-  '2': styles.cardRed,
+  Happy: styles.cardBlue,
+  Neutral: styles.cardYellow,
+  Sad: styles.cardRed,
 };
 export default observer(VideoList);

@@ -210,11 +210,17 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
           }}
           title="Next"
           onPress={() => {
-            navigation.navigate('DescribeVideoAddNotes', {
-              uri: uri,
-              mood: mood,
-              tags: tags,
-            });
+            console.log('mood', mood);
+            if (typeof mood === 'undefined') {
+              alert('Please enter your mood!');
+              return;
+            } else {
+              navigation.navigate('DescribeVideoAddNotes', {
+                uri: uri,
+                mood: mood,
+                tags: tags,
+              });
+            }
           }}
         ></Button>
       </View>
