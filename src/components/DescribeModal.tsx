@@ -160,7 +160,7 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
           <Image style={styles.emoji} source={ICONS.happyIcon} />
         </TouchableOpacity>
       </View>
-      <View style={styles.tagContainer}>
+      <View>
         <Text style={styles.body}>{STRINGS.giveItATag}</Text>
         <View style={styles.textInputContainer}>
           <Autocomplete
@@ -243,8 +243,6 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
 // stylesheet for container
 const styles = StyleSheet.create({
   container: {
-    paddingBottom: SPACING.l,
-    flex: 1,
     flexGrow: 1,
   },
   emojiContainer: {
@@ -254,7 +252,6 @@ const styles = StyleSheet.create({
     marginTop: SPACING.xl,
     marginBottom: SPACING.xl,
   },
-  tagContainer: {},
   textInputContainer: {
     flexDirection: 'row',
     marginBottom: SPACING.s,
