@@ -9,7 +9,8 @@ import {
   Text,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Camera, CameraRecordingOptions, CameraType } from 'expo-camera';
+// import {CameraRecordingOptions, CameraType } from 'expo-camera';
+import { Camera } from 'react-native-vision-camera';
 import { COLORS, FONTS } from '../res/theme';
 import { ICONS } from '../res/icons';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
