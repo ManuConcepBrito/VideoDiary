@@ -177,7 +177,7 @@ const VideoList = () => {
       <View>
         <Button
           title="Create Entry"
-          onPress={() => navigation.navigate('CameraScreen')}
+          onPress={() => navigation.navigate('CameraPage')}
           style={{
             backgroundColor: COLORS.black,
             paddingVertical: SPACING.m,
