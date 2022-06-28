@@ -34,6 +34,7 @@ const VideoList = () => {
 
   useEffect(() => {
     store.getFilteredEntries(filter.toLowerCase().trim());
+    store.getFilteredTags(filter.toLowerCase().trim());
     if (selectedTag === filter) {
       setIsSelected(true);
     } else {
@@ -47,8 +48,8 @@ const VideoList = () => {
         autoCapitalize="none"
         autoCorrect={false}
         onEndEditing={() => {
+          console.log('End editing');
           store.getFilteredEntries(filter.toLowerCase().trim());
-          setIsSelected(false);
         }}
         clearButtonMode="always"
         value={filter}
@@ -63,23 +64,6 @@ const VideoList = () => {
         }}
       />
     );
-  };
-  const filterTags = () => {
-    if (filter === '') {
-      return [];
-    }
-    const filteredTags = store.tags.filter((tag) =>
-      tag.toLowerCase().includes(filter.toLowerCase().trim())
-    );
-    if (
-      filteredTags.length === 1 &&
-      filteredTags[0] === filter.toLowerCase().trim()
-    ) {
-      return [];
-    }
-
-    console.log(filteredTags);
-    return filteredTags;
   };
 
   return (
@@ -108,7 +92,7 @@ const VideoList = () => {
             value={filter}
             hideResults={isSelected}
             autoCorrect={false}
-            data={filterTags()}
+            data={store.filteredTags.slice()}
             listContainerStyle={{
               borderWidth: 3,
               borderTopWidth: 0,
