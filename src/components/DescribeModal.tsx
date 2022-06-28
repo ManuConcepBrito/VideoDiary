@@ -45,6 +45,7 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
 
   React.useEffect(() => {
     store.getFilteredEntries(tagInput.toLowerCase().trim());
+    store.getFilteredTags(tagInput.toLowerCase().trim());
     console.log('isSelected', isSelected);
     if ((selectedTag !== '' || tagInput !== '') && selectedTag === tagInput) {
       setIsSelected(true);
@@ -62,7 +63,6 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
         autoCapitalize="none"
         autoCorrect={false}
         onEndEditing={() => {
-          Keyboard.dismiss();
           setIsSelected(false);
         }}
         onChangeText={(input) => updateTag(input)}
@@ -73,22 +73,6 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
         clearButtonMode="always"
       />
     );
-  };
-
-  const filterTags = () => {
-    if (tagInput === '') {
-      return [];
-    }
-    const filteredTags = store.tags.filter((tag) =>
-      tag.toLowerCase().includes(tagInput.toLowerCase().trim())
-    );
-    if (
-      filteredTags.length === 1 &&
-      filteredTags[0] === tagInput.toLowerCase().trim()
-    ) {
-      return [];
-    }
-    return filteredTags;
   };
 
   const updateTag = (input: string) => {
@@ -104,7 +88,6 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
     console.log('Saving tag', tagInput);
     setTags((tags) => [...tags, tagInput.trim()]);
     setTagInput('');
-    Keyboard.dismiss();
   };
 
   const navigateToSecondDescribePage = () => {
@@ -168,7 +151,7 @@ const DescribeModal = ({ uri }: DescribeVideoProps) => {
             value={tagInput}
             hideResults={isSelected}
             autoCorrect={false}
-            data={filterTags()}
+            data={store.filteredTags.slice()}
             listContainerStyle={{
               borderWidth: 3,
               borderTopWidth: 0,

@@ -21,16 +21,19 @@ export class DiaryStore {
   entries: Entry[] = [];
   filteredEntries: Entry[] = [];
   tags: string[] = [];
+  filteredTags: string[] = [];
 
   constructor() {
     makeObservable(this, {
       entries: observable,
       filteredEntries: observable,
+      filteredTags: observable,
       tags: observable,
       addEntry: action,
       removeEntry: action,
       sortedEntries: computed,
       getFilteredEntries: action,
+      getFilteredTags: action,
     });
 
     makePersistable(this, {
@@ -64,10 +67,20 @@ export class DiaryStore {
     if (filter === '') {
       this.filteredEntries = sortedEntries;
     } else {
-      console.log('filtered entries', this.filteredEntries);
       this.filteredEntries = sortedEntries.filter((entry) => {
         return containsDate(entry, filter) || containsTag(entry, filter);
       });
+    }
+  };
+
+  getFilteredTags = (filter: string) => {
+    // get tags to display in autocomplete
+    if (filter === '') {
+      this.filteredTags = [];
+    } else {
+      this.filteredTags = this.tags.filter((tag) =>
+        tag.toLowerCase().includes(filter.toLowerCase().trim())
+      );
     }
   };
 
@@ -86,6 +99,8 @@ export class DiaryStore {
 }
 
 const containsDate = ({ dateString }: Entry, query: string) => {
+  // find a better way to do this
+  // right now for example if the tag is "a" it will show all the entries because every weekday has an "a"
   const date = new Date(dateString);
   if (
     date

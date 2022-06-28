@@ -55,7 +55,7 @@ export const AutocompleteInput = (props) => {
       <View style={[styles.inputContainer, inputContainerStyle]}>
         {renderTextInput()}
       </View>
-      {!hideResults && (
+      {!hideResults && showResults && (
         <View
           style={listContainerStyle}
           onStartShouldSetResponderCapture={onStartShouldSetResponderCapture}

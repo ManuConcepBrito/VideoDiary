@@ -18,8 +18,7 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "io.cotid.lumen",
-      "autoIncrement": true
+      "bundleIdentifier": "io.cotid.lumen"
     },
     "android": {
       "adaptiveIcon": {
