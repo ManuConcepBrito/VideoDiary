@@ -3,7 +3,7 @@
     "name": "Lumen",
     "slug": "lumen",
     "owner": "cotidio",
-    "version": "0.0.1",
+    "version": "0.0.8",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -18,7 +18,8 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "io.cotid.lumen"
+      "bundleIdentifier": "io.cotid.lumen",
+      "autoIncrement": true
     },
     "android": {
       "adaptiveIcon": {
@@ -31,7 +32,14 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "sentry-expo",
+      [
+        "react-native-vision-camera",
+        {
+          "cameraPermissionText": "$(PRODUCT_NAME) needs access to your Camera.",
+          "enableMicrophonePermission": true,
+          "microphonePermissionText": "$(PRODUCT_NAME) needs access to your Microphone."
+        }
+      ],
       [
         "expo-media-library",
         {
@@ -39,8 +47,7 @@
           "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
           "isAccessMediaLocationEnabled": true
         }
-      ],
-      "react-native-vision-camera"
+      ]
     ],
     "hooks": {
       "postPublish": [
