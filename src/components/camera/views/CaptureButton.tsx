@@ -156,12 +156,12 @@ const _CaptureButton: React.FC<Props> = ({
         case State.BEGAN: {
           // enter "recording mode"
           recordingProgress.value = 0;
-          isPressingButton.value = true;
           const now = new Date();
           pressDownDate.current = now;
           setTimeout(() => {
             if (pressDownDate.current === now) {
               // user is still pressing down after 200ms, so his intention is to create a video
+              isPressingButton.value = true;
               startRecording();
             }
           }, START_RECORDING_DELAY);
@@ -179,8 +179,8 @@ const _CaptureButton: React.FC<Props> = ({
             const diff = now.getTime() - pressDownDate.current.getTime();
             pressDownDate.current = undefined;
             if (diff < START_RECORDING_DELAY) {
-              // user has released the button within 200ms, so his intention is to take a single picture.
-              await takePhoto();
+              // the user needs to press the button longer
+              return;
             } else {
               // user has held the button for more than 200ms, so he has been recording this entire time.
               await stopRecording();
