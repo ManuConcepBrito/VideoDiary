@@ -59,7 +59,7 @@ export function PermissionsPage({
       microphonePermissionStatus === 'authorized' &&
       mediaSavingPermissionStatus === 'all'
     )
-      navigation.replace('CameraPage');
+      navigation.replace('VideoList');
   }, [
     cameraPermissionStatus,
     microphonePermissionStatus,
@@ -67,43 +67,13 @@ export function PermissionsPage({
     navigation,
   ]);
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.welcome}>Welcome to{'\n'}Lumen.</Text>
-      <View style={styles.permissionsContainer}>
-        {cameraPermissionStatus !== 'authorized' && (
-          <Text style={styles.permissionText}>
-            Lumen needs <Text style={styles.bold}>Camera permission</Text>.
-            <Text style={styles.hyperlink} onPress={requestCameraPermission}>
-              Grant
-            </Text>
-          </Text>
-        )}
-        {microphonePermissionStatus !== 'authorized' && (
-          <Text style={styles.permissionText}>
-            Lumen needs <Text style={styles.bold}>Microphone permission</Text>.
-            <Text
-              style={styles.hyperlink}
-              onPress={requestMicrophonePermission}
-            >
-              Grant
-            </Text>
-          </Text>
-        )}
-        {mediaSavingPermissionStatus !== 'all' && (
-          <Text style={styles.permissionText}>
-            Lumen needs <Text style={styles.bold}>Camera Roll permission</Text>.
-            <Text
-              style={styles.hyperlink}
-              onPress={requestMediaSavingPermission}
-            >
-              Grant
-            </Text>
-          </Text>
-        )}
-      </View>
-    </View>
-  );
+  useEffect(() => {
+    requestCameraPermission();
+    requestMicrophonePermission();
+    requestMediaSavingPermission();
+  }, []);
+
+  return <View style={styles.container}></View>;
 }
 
 const styles = StyleSheet.create({
