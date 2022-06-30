@@ -70,6 +70,7 @@ const _CaptureButton: React.FC<Props> = ({
 }): React.ReactElement => {
   const pressDownDate = useRef<Date | undefined>(undefined);
   const isRecording = useRef(false);
+  const numberOfTapsInShutterButton = useRef(0);
   const recordingProgress = useSharedValue(0);
   const takePhotoOptions = useMemo<TakePhotoOptions & TakeSnapshotOptions>(
     () => ({
@@ -158,39 +159,29 @@ const _CaptureButton: React.FC<Props> = ({
           recordingProgress.value = 0;
           const now = new Date();
           pressDownDate.current = now;
-          setTimeout(() => {
-            if (pressDownDate.current === now) {
-              // user is still pressing down after 200ms, so his intention is to create a video
-              isPressingButton.value = true;
-              startRecording();
-            }
-          }, START_RECORDING_DELAY);
-          setIsPressingButton(true);
+          isPressingButton.value = true;
+          if (numberOfTapsInShutterButton.current === 0) {
+            startRecording();
+            numberOfTapsInShutterButton.current =
+              numberOfTapsInShutterButton.current + 1;
+            setIsPressingButton(true);
+          } else if (numberOfTapsInShutterButton.current === 1) {
+            await stopRecording();
+            numberOfTapsInShutterButton.current = 0;
+            pressDownDate.current = undefined;
+            setTimeout(() => {
+              isPressingButton.value = false;
+              setIsPressingButton(false);
+            }, 500);
+          } else {
+            throw new Error('Unhandled error in Gesture handler');
+          }
           return;
         }
         case State.END:
         case State.FAILED:
         case State.CANCELLED: {
-          // exit "recording mode"
-          try {
-            if (pressDownDate.current == null)
-              throw new Error('PressDownDate ref .current was null!');
-            const now = new Date();
-            const diff = now.getTime() - pressDownDate.current.getTime();
-            pressDownDate.current = undefined;
-            if (diff < START_RECORDING_DELAY) {
-              // the user needs to press the button longer
-              return;
-            } else {
-              // user has held the button for more than 200ms, so he has been recording this entire time.
-              await stopRecording();
-            }
-          } finally {
-            setTimeout(() => {
-              isPressingButton.value = false;
-              setIsPressingButton(false);
-            }, 500);
-          }
+          console.log('User released shutter button');
           return;
         }
         default:
