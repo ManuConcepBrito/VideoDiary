@@ -53,7 +53,7 @@ const EditNoteModal = ({
           <View style={styles.notesContainer}>
             <TextInput
               value={note}
-              placeholder="Keywords about today..."
+              placeholder="Notes about today..."
               autoCapitalize="none"
               autoCorrect
               onEndEditing={() => Keyboard.dismiss()}
