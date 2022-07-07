@@ -56,7 +56,7 @@ const AddNotes = ({ uri, mood, tags }: DescribeVideoProps) => {
           value={note}
           multiline
           blurOnSubmit
-          placeholder="Keywords about today..."
+          placeholder="Notes about today..."
           autoCapitalize="none"
           autoCorrect={false}
           onEndEditing={() => Keyboard.dismiss()}

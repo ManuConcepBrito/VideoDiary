@@ -66,7 +66,7 @@ export function CameraPage({
   const isActive = isFocussed && isForeground;
 
   const [cameraPosition, setCameraPosition] = useState<'front' | 'back'>(
-    'back'
+    'front'
   );
   const [enableHdr, setEnableHdr] = useState(false);
   const [flash, setFlash] = useState<'off' | 'on'>('off');
