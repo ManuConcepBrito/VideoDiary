@@ -1849,6 +1849,16 @@
     component-type "^1.2.1"
     join-component "^1.1.0"
 
+"@sentry/browser@6.12.0":
+  version "6.12.0"
+  resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-6.12.0.tgz#970cd68fa117a1e1336fdb373e3b1fa76cd63e2d"
+  integrity sha512-wsJi1NLOmfwtPNYxEC50dpDcVY7sdYckzwfqz1/zHrede1mtxpqSw+7iP4bHADOJXuF+ObYYTHND0v38GSXznQ==
+  dependencies:
+    "@sentry/core" "6.12.0"
+    "@sentry/types" "6.12.0"
+    "@sentry/utils" "6.12.0"
+    tslib "^1.9.3"
+
 "@sentry/browser@6.19.2", "@sentry/browser@^6.12.0":
   version "6.19.2"
   resolved "https://registry.npmjs.org/@sentry/browser/-/browser-6.19.2.tgz"
@@ -1859,7 +1869,7 @@
     "@sentry/utils" "6.19.2"
     tslib "^1.9.3"
 
-"@sentry/cli@^1.52.4", "@sentry/cli@^1.74.2":
+"@sentry/cli@^1.52.4", "@sentry/cli@^1.68.0", "@sentry/cli@^1.74.2":
   version "1.74.4"
   resolved "https://registry.npmjs.org/@sentry/cli/-/cli-1.74.4.tgz"
   integrity sha512-BMfzYiedbModsNBJlKeBOLVYUtwSi99LJ8gxxE4Bp5N8hyjNIN0WVrozAVZ27mqzAuy6151Za3dpmOLO86YlGw==
@@ -1872,6 +1882,17 @@
     proxy-from-env "^1.1.0"
     which "^2.0.2"
 
+"@sentry/core@6.12.0":
+  version "6.12.0"
+  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-6.12.0.tgz#bc7c5f0785b6a392d9ad47bd9b1fae3f5389996c"
+  integrity sha512-mU/zdjlzFHzdXDZCPZm8OeCw7c9xsbL49Mq0TrY0KJjLt4CJBkiq5SDTGfRsenBLgTedYhe5Z/J8Z+xVVq+MfQ==
+  dependencies:
+    "@sentry/hub" "6.12.0"
+    "@sentry/minimal" "6.12.0"
+    "@sentry/types" "6.12.0"
+    "@sentry/utils" "6.12.0"
+    tslib "^1.9.3"
+
 "@sentry/core@6.19.2":
   version "6.19.2"
   resolved "https://registry.npmjs.org/@sentry/core/-/core-6.19.2.tgz"
@@ -1883,6 +1904,15 @@
     "@sentry/utils" "6.19.2"
     tslib "^1.9.3"
 
+"@sentry/hub@6.12.0":
+  version "6.12.0"
+  resolved "https://registry.yarnpkg.com/@sentry/hub/-/hub-6.12.0.tgz#29e323ab6a95e178fb14fffb684aa0e09707197f"
+  integrity sha512-yR/UQVU+ukr42bSYpeqvb989SowIXlKBanU0cqLFDmv5LPCnaQB8PGeXwJAwWhQgx44PARhmB82S6Xor8gYNxg==
+  dependencies:
+    "@sentry/types" "6.12.0"
+    "@sentry/utils" "6.12.0"
+    tslib "^1.9.3"
+
 "@sentry/hub@6.19.2":
   version "6.19.2"
   resolved "https://registry.npmjs.org/@sentry/hub/-/hub-6.19.2.tgz"
@@ -1890,6 +1920,16 @@
   dependencies:
     "@sentry/types" "6.19.2"
     "@sentry/utils" "6.19.2"
+    tslib "^1.9.3"
+
+"@sentry/integrations@6.12.0":
+  version "6.12.0"
+  resolved "https://registry.yarnpkg.com/@sentry/integrations/-/integrations-6.12.0.tgz#d900e89c588fbe6ce1b89ce74c042574daf638bb"
+  integrity sha512-M9gsVdWZp5fAFFpTjK2IBuWzW4SBxGAI3tVbYZvVx16S/BY0GsPC1dYpjJx9OTBS/8CmCWdGxnUmjACo/8w1LA==
+  dependencies:
+    "@sentry/types" "6.12.0"
+    "@sentry/utils" "6.12.0"
+    localforage "^1.8.1"
     tslib "^1.9.3"
 
 "@sentry/integrations@6.19.2", "@sentry/integrations@^6.12.0":
@@ -1902,6 +1942,15 @@
     localforage "^1.8.1"
     tslib "^1.9.3"
 
+"@sentry/minimal@6.12.0":
+  version "6.12.0"
+  resolved "https://registry.yarnpkg.com/@sentry/minimal/-/minimal-6.12.0.tgz#cbe20e95056cedb9709d7d5b2119ef95206a9f8c"
+  integrity sha512-r3C54Q1KN+xIqUvcgX9DlcoWE7ezWvFk2pSu1Ojx9De81hVqR9u5T3sdSAP2Xma+um0zr6coOtDJG4WtYlOtsw==
+  dependencies:
+    "@sentry/hub" "6.12.0"
+    "@sentry/types" "6.12.0"
+    tslib "^1.9.3"
+
 "@sentry/minimal@6.19.2":
   version "6.19.2"
   resolved "https://registry.npmjs.org/@sentry/minimal/-/minimal-6.19.2.tgz"
@@ -1911,7 +1960,22 @@
     "@sentry/types" "6.19.2"
     tslib "^1.9.3"
 
-"@sentry/react-native@^3.1.1", "@sentry/react-native@^3.4.3":
+"@sentry/react-native@3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@sentry/react-native/-/react-native-3.1.1.tgz#4edd555ff5a9eda292d067314282b2c1cb519512"
+  integrity sha512-w+KVlZ5pj0irI5vo1KhdPbr7EFT7bDeAENfckwYE+ogZWsEitokxvkPy7eqKZnbyQf3stlYACU96tRiwRLqiaA==
+  dependencies:
+    "@sentry/browser" "6.12.0"
+    "@sentry/cli" "^1.68.0"
+    "@sentry/core" "6.12.0"
+    "@sentry/hub" "6.12.0"
+    "@sentry/integrations" "6.12.0"
+    "@sentry/react" "6.12.0"
+    "@sentry/tracing" "6.12.0"
+    "@sentry/types" "6.12.0"
+    "@sentry/utils" "6.12.0"
+
+"@sentry/react-native@^3.1.1":
   version "3.4.3"
   resolved "https://registry.npmjs.org/@sentry/react-native/-/react-native-3.4.3.tgz"
   integrity sha512-q1m/KaPWkv9/nXMXo5S5VzZNngC9gxJrtfPnMQPCXzLwLiGMlc2FBMBDJmZGzeSkQMr163Xb+2UYZEPqCUvdvg==
@@ -1927,6 +1991,18 @@
     "@sentry/utils" "6.19.2"
     "@sentry/wizard" "^1.2.17"
 
+"@sentry/react@6.12.0":
+  version "6.12.0"
+  resolved "https://registry.yarnpkg.com/@sentry/react/-/react-6.12.0.tgz#8ae2680d226fafb0da0f3d8366bb285004ba6c2e"
+  integrity sha512-E8Nw9PPzP/EyMy64ksr9xcyYYlBmUA5ROnkPQp7o5wF0xf5/J+nMS1tQdyPnLQe2KUgHlN4kVs2HHft1m7mSYQ==
+  dependencies:
+    "@sentry/browser" "6.12.0"
+    "@sentry/minimal" "6.12.0"
+    "@sentry/types" "6.12.0"
+    "@sentry/utils" "6.12.0"
+    hoist-non-react-statics "^3.3.2"
+    tslib "^1.9.3"
+
 "@sentry/react@6.19.2":
   version "6.19.2"
   resolved "https://registry.npmjs.org/@sentry/react/-/react-6.19.2.tgz"
@@ -1937,6 +2013,17 @@
     "@sentry/types" "6.19.2"
     "@sentry/utils" "6.19.2"
     hoist-non-react-statics "^3.3.2"
+    tslib "^1.9.3"
+
+"@sentry/tracing@6.12.0":
+  version "6.12.0"
+  resolved "https://registry.yarnpkg.com/@sentry/tracing/-/tracing-6.12.0.tgz#a05c8985ee7fed7310b029b147d8f9f14f2a2e67"
+  integrity sha512-u10QHNknPBzbWSUUNMkvuH53sQd5NaBo6YdNPj4p5b7sE7445Sh0PwBpRbY3ZiUUiwyxV59fx9UQ4yVnPGxZQA==
+  dependencies:
+    "@sentry/hub" "6.12.0"
+    "@sentry/minimal" "6.12.0"
+    "@sentry/types" "6.12.0"
+    "@sentry/utils" "6.12.0"
     tslib "^1.9.3"
 
 "@sentry/tracing@6.19.2":
@@ -1950,10 +2037,23 @@
     "@sentry/utils" "6.19.2"
     tslib "^1.9.3"
 
+"@sentry/types@6.12.0":
+  version "6.12.0"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-6.12.0.tgz#b7395688a79403c6df8d8bb8d81deb8222519853"
+  integrity sha512-urtgLzE4EDMAYQHYdkgC0Ei9QvLajodK1ntg71bGn0Pm84QUpaqpPDfHRU+i6jLeteyC7kWwa5O5W1m/jrjGXA==
+
 "@sentry/types@6.19.2", "@sentry/types@^6.12.0":
   version "6.19.2"
   resolved "https://registry.npmjs.org/@sentry/types/-/types-6.19.2.tgz"
   integrity sha512-XO5qmVBdTs+7PdCz7fAwn1afWxSnRE2KLBFg5/vOdKosPSSHsSHUURSkxiEZc2QsR+JpRB4AeQ26AkIRX38qTg==
+
+"@sentry/utils@6.12.0":
+  version "6.12.0"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-6.12.0.tgz#3de261e8d11bdfdc7add64a3065d43517802e975"
+  integrity sha512-oRHQ7TH5TSsJqoP9Gqq25Jvn9LKexXfAh/OoKwjMhYCGKGhqpDNUIZVgl9DWsGw5A5N5xnQyLOxDfyRV5RshdA==
+  dependencies:
+    "@sentry/types" "6.12.0"
+    tslib "^1.9.3"
 
 "@sentry/utils@6.19.2":
   version "6.19.2"
@@ -10112,7 +10212,7 @@ send@0.18.0:
 
 sentry-expo@^4.2.0:
   version "4.2.0"
-  resolved "https://registry.npmjs.org/sentry-expo/-/sentry-expo-4.2.0.tgz"
+  resolved "https://registry.yarnpkg.com/sentry-expo/-/sentry-expo-4.2.0.tgz#8dc626b39cc1538c1284cc383b9d18c3252859c4"
   integrity sha512-UL+i+kLDmB27kmY/BvkhY7aBqAxnVdy+IVg4jMX20V/iAgA1HBk2szf2gCt9vHDja6Q0HzgkdC91xiQ89jKiOw==
   dependencies:
     "@expo/config-plugins" "~4.1.4"
