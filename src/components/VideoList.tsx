@@ -216,8 +216,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     maxWidth: '31%',
   },
-  cardBlue: {
-    backgroundColor: COLORS.blue,
+  cardGreen: {
+    backgroundColor: COLORS.green,
   },
   cardRed: {
     backgroundColor: COLORS.red,
@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
 });
 
 const cardStyleMap: any = {
-  Happy: styles.cardBlue,
+  Happy: styles.cardGreen,
   Neutral: styles.cardYellow,
   Sad: styles.cardRed,
 };
