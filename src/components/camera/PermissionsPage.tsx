@@ -8,6 +8,7 @@ import { CONTENT_SPACING, SAFE_AREA_PADDING } from './Constants';
 import * as MediaLibrary from 'expo-media-library';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamList } from '../../../App';
+import { VIDEO_FOLDER_NAME } from '../../res/constants';
 
 type PermissionsPageProps = NativeStackNavigationProp<
   StackParamList,
@@ -53,13 +54,29 @@ export function PermissionsPage({
     setCameraPermissionStatus(permission);
   }, []);
 
+  const createVideoDiaryFolderInGallery = async () => {
+    try {
+      const albumExists = await MediaLibrary.getAlbumAsync(VIDEO_FOLDER_NAME);
+      if (!albumExists) {
+        console.log('Album does not exist, creating...');
+        await MediaLibrary.createAlbumAsync(VIDEO_FOLDER_NAME);
+      } else {
+        console.log('Album exists, continuing...');
+      }
+    } catch (e) {
+      console.error('Error while creating VideoDiary Folder: ', e);
+    }
+  };
+
   useEffect(() => {
     if (
       cameraPermissionStatus === 'authorized' &&
       microphonePermissionStatus === 'authorized' &&
       mediaSavingPermissionStatus === 'all'
-    )
+    ) {
+      createVideoDiaryFolderInGallery();
       navigation.replace('VideoList');
+    }
   }, [
     cameraPermissionStatus,
     microphonePermissionStatus,

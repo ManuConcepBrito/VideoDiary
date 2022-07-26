@@ -20,6 +20,7 @@ const EditVideo = () => {
   const route = useRoute<RouteProp<StackParamList, 'EditVideo'>>();
   const store = useDiaryStore();
   const entry = route.params.entry;
+  console.log('videoURI:', entry.videoURI);
 
   const navigation = useNavigation<EditVideoProps>();
 

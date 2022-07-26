@@ -40,6 +40,8 @@ import { examplePlugin } from './frame-processors/ExamplePlugin';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { useIsFocused } from '@react-navigation/native';
 import { StackParamList } from '../../../App';
+import * as MediaLibrary from 'expo-media-library';
+import { VIDEO_FOLDER_NAME } from '../../res/constants';
 
 const ReanimatedCamera = Reanimated.createAnimatedComponent(Camera);
 Reanimated.addWhitelistedNativeProps({
@@ -181,11 +183,33 @@ export function CameraPage({
     console.log('Camera initialized!');
     setIsCameraInitialized(true);
   }, []);
+
+  const moveVideoToGallery = async (uri: string) => {
+    // move file from tmp to the VideoDiary folder in the phone gallery
+    try {
+      const asset = await MediaLibrary.createAssetAsync(uri);
+      // for some reason the uri of asset.uri is not playable so we need to get the info
+      // for the asset to get the localUri
+      const assetInfo = await MediaLibrary.getAssetInfoAsync(asset);
+      // album should be created already from Permissions Page, therefore we don't check if it exists
+      const album = await MediaLibrary.getAlbumAsync(VIDEO_FOLDER_NAME);
+      await MediaLibrary.addAssetsToAlbumAsync([asset.uri], album);
+      console.log('Video moved from tmp to VideoDiary folder');
+      return assetInfo.localUri;
+    } catch (e) {
+      console.error(
+        'Error while creating album and moving video to gallery: ',
+        e
+      );
+    }
+  };
   const onMediaCaptured = useCallback(
-    (media: PhotoFile | VideoFile, type: 'photo' | 'video') => {
+    async (media: PhotoFile | VideoFile, type: 'photo' | 'video') => {
       console.log(`Media captured! ${JSON.stringify(media)}`);
+      const videoURI = await moveVideoToGallery(media.path);
+      console.log('video uri: ', videoURI);
       navigation.navigate('DescribeVideo', {
-        uri: media.path,
+        uri: videoURI,
       });
     },
     [navigation]
