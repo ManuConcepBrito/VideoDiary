@@ -28,6 +28,8 @@ PODS:
   - EXMediaLibrary (14.1.0):
     - ExpoModulesCore
     - React-Core
+  - EXNotifications (0.15.4):
+    - ExpoModulesCore
   - EXPermissions (13.2.0):
     - ExpoModulesCore
   - Expo (45.0.4):
@@ -483,16 +485,16 @@ PODS:
   - RNScreens (3.11.1):
     - React-Core
     - React-RCTImage
-  - RNSentry (3.4.3):
+  - RNSentry (3.1.1):
     - React-Core
-    - Sentry (= 7.11.0)
+    - Sentry (= 7.3.0)
   - RNStaticSafeAreaInsets (2.1.2):
     - React
   - RNVectorIcons (9.1.0):
     - React-Core
-  - Sentry (7.11.0):
-    - Sentry/Core (= 7.11.0)
-  - Sentry/Core (7.11.0)
+  - Sentry (7.3.0):
+    - Sentry/Core (= 7.3.0)
+  - Sentry/Core (7.3.0)
   - VisionCamera (2.13.5):
     - React
     - React-callinvoker
@@ -514,6 +516,7 @@ DEPENDENCIES:
   - EXJSONUtils (from `../node_modules/expo-json-utils/ios`)
   - EXManifests (from `../node_modules/expo-manifests/ios`)
   - EXMediaLibrary (from `../node_modules/expo-media-library/ios`)
+  - EXNotifications (from `../node_modules/expo-notifications/ios`)
   - EXPermissions (from `../node_modules/expo-permissions/ios`)
   - Expo (from `../node_modules/expo/ios`)
   - expo-dev-client (from `../node_modules/expo-dev-client/ios`)
@@ -606,6 +609,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-manifests/ios"
   EXMediaLibrary:
     :path: "../node_modules/expo-media-library/ios"
+  EXNotifications:
+    :path: "../node_modules/expo-notifications/ios"
   EXPermissions:
     :path: "../node_modules/expo-permissions/ios"
   Expo:
@@ -729,6 +734,7 @@ SPEC CHECKSUMS:
   EXJSONUtils: 2a74b8f40f1523cc3f92af99c91aa78201737a77
   EXManifests: 0c6134b7b6f3236a93a778c3f44ba1cfb3f9fa3d
   EXMediaLibrary: 84cddf988a089e28070790438caf58d8b265b37a
+  EXNotifications: 297bb555bbd26fd7aa8ff3bf7e724d4d65f7e895
   EXPermissions: 3dbb869e7f96a5711314f73d48ddc2f28009a7f6
   Expo: 64d52669fa3b9342919b5b44b2b4f15f19b0cf76
   expo-dev-client: 658fa86a3498812778d6c706205677c8e0674b9f
@@ -779,10 +785,10 @@ SPEC CHECKSUMS:
   RNGestureHandler: 1dc1ea9d4b64f999042afafbaccf5b143f0b2fa2
   RNReanimated: 64573e25e078ae6bec03b891586d50b9ec284393
   RNScreens: 4d83613b50b74ed277026375dc0810893b0c347f
-  RNSentry: 85f6525b5fe8d2ada065858026b338605b3c09da
+  RNSentry: 49abc89b0190b4c8afe0fa5d065f98e36cb53233
   RNStaticSafeAreaInsets: bb611be967ba27ced2fbf9aca0f067a786175ea6
   RNVectorIcons: 7923e585eaeb139b9f4531d25a125a1500162a0b
-  Sentry: 0c5cd63d714187b4a39c331c1f0eb04ba7868341
+  Sentry: 9a4e621430e2dae4477d791f2f7e905720b6efbf
   VisionCamera: 1ae1415dd21fee97c9bbfc1504d87cd7daba8d9c
   Yoga: 99652481fcd320aefa4a7ef90095b95acd181952
 

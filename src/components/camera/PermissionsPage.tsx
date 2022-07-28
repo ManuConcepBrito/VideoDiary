@@ -1,6 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useCallback, useEffect, useState } from 'react';
-import { ImageRequireSource, Linking } from 'react-native';
+import { ImageRequireSource, Linking, Platform } from 'react-native';
 
 import { StyleSheet, View, Text, Image } from 'react-native';
 import { Camera, CameraPermissionStatus } from 'react-native-vision-camera';
@@ -9,6 +9,8 @@ import * as MediaLibrary from 'expo-media-library';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { StackParamList } from '../../../App';
 import { VIDEO_FOLDER_NAME } from '../../res/constants';
+import * as Notifications from 'expo-notifications';
+import * as Device from 'expo-device';
 
 type PermissionsPageProps = NativeStackNavigationProp<
   StackParamList,
@@ -26,6 +28,39 @@ export function PermissionsPage({
     useState<MediaLibrary.PermissionResponse.accessPrivileges>();
   const [mediaLibraryPermission, requestPermission] =
     MediaLibrary.usePermissions();
+
+  // push notifications
+  const [expoPushToken, setExpoPushToken] = useState<string>();
+
+  const registerForPushNotificationsAsync = async () => {
+    if (Device.isDevice) {
+      const { status: existingStatus } =
+        await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      const token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log('Expo push token: ', token);
+      setExpoPushToken(token);
+    } else {
+      alert('Must use physical device for Push Notifications');
+    }
+
+    if (Platform.OS === 'android') {
+      Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+  };
 
   const requestMicrophonePermission = useCallback(async () => {
     console.log('Requesting microphone permission...');
@@ -54,6 +89,8 @@ export function PermissionsPage({
     setCameraPermissionStatus(permission);
   }, []);
 
+  // push notifications
+
   const createVideoDiaryFolderInGallery = async () => {
     try {
       const albumExists = await MediaLibrary.getAlbumAsync(VIDEO_FOLDER_NAME);
@@ -72,8 +109,10 @@ export function PermissionsPage({
     if (
       cameraPermissionStatus === 'authorized' &&
       microphonePermissionStatus === 'authorized' &&
-      mediaSavingPermissionStatus === 'all'
+      mediaSavingPermissionStatus === 'all' &&
+      expoPushToken !== null
     ) {
+      console.log('Push notifications permissions', expoPushToken);
       createVideoDiaryFolderInGallery();
       navigation.replace('VideoList');
     }
@@ -81,6 +120,7 @@ export function PermissionsPage({
     cameraPermissionStatus,
     microphonePermissionStatus,
     mediaSavingPermissionStatus,
+    expoPushToken,
     navigation,
   ]);
 
@@ -88,6 +128,7 @@ export function PermissionsPage({
     requestCameraPermission();
     requestMicrophonePermission();
     requestMediaSavingPermission();
+    registerForPushNotificationsAsync();
   }, []);
 
   return <View style={styles.container}></View>;

@@ -1,6 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useFonts, ChakraPetch_700Bold } from '@expo-google-fonts/chakra-petch';
+import { Platform } from 'react-native';
 
 import React, { useEffect, useState } from 'react';
 import VideoList from './src/components/VideoList';
@@ -14,6 +15,9 @@ import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { Camera, CameraPermissionStatus } from 'react-native-vision-camera';
 import * as MediaLibrary from 'expo-media-library';
 import * as Sentry from 'sentry-expo';
+import * as Notifications from 'expo-notifications';
+import { EXPERIENCE_ID } from './src/res/constants';
+import { AirtableBase } from './src/api/Airtable';
 
 Sentry.init({
   dsn: 'https://ce22889f23a349a3a074aa325f901e11@o1278860.ingest.sentry.io/6478871',
@@ -40,11 +44,61 @@ const App = () => {
     useState<CameraPermissionStatus>();
   const [mediaLibraryPermission, requestPermission] =
     MediaLibrary.usePermissions();
+  // push notifications
+  const [pushNotificationPermission, setPushNotificationPermission] =
+    useState<Notifications.NotificationPermissionsStatus>();
 
   useEffect(() => {
     Camera.getCameraPermissionStatus().then(setCameraPermission);
     Camera.getMicrophonePermissionStatus().then(setMicrophonePermission);
+
+    // check if user has been asked for push notifications
+    Notifications.getPermissionsAsync().then(setPushNotificationPermission);
   }, []);
+
+  useEffect(() => {
+    if (pushNotificationPermission?.status === 'granted') {
+      Notifications.getExpoPushTokenAsync({
+        experienceId: EXPERIENCE_ID,
+      }).then((res) => {
+        const token = res.data;
+        console.log('Push notification token: ', token);
+        AirtableBase('user')
+          .select({
+            filterByFormula: `{push_token} = "${token}"`,
+          })
+          .firstPage(function (err, records) {
+            if (err) {
+              console.error(err);
+              return;
+            }
+            if (records?.length === 0) {
+              // there's not a record in our airtable therefore we push a new one
+              console.log("THERE'S NOT A RECORD");
+              AirtableBase('user').create(
+                {
+                  push_token: token,
+                  status: 'AUTHORIZED',
+                },
+                function (err, record) {
+                  if (err) {
+                    console.error(
+                      'Error while uploading token to airtable: ',
+                      err
+                    );
+                    return;
+                  }
+                  console.log(record?.getId());
+                }
+              );
+            } else {
+              console.log("There's already an user with this token");
+            }
+            return;
+          });
+      });
+    }
+  }, [pushNotificationPermission]);
 
   let [fontsLoaded] = useFonts({
     ChakraPetch_700Bold,
@@ -53,10 +107,14 @@ const App = () => {
   console.log(
     `Re-rendering Navigator. Camera: ${cameraPermission} | Microphone: ${microphonePermission} | MediaLibrary ${JSON.stringify(
       mediaLibraryPermission
-    )}`
+    )} | PushNotification: ${pushNotificationPermission?.status}`
   );
 
-  if (cameraPermission == null || microphonePermission == null) {
+  if (
+    cameraPermission == null ||
+    microphonePermission == null ||
+    pushNotificationPermission == null
+  ) {
     // still loading
     return null;
   }
@@ -68,7 +126,10 @@ const App = () => {
   const showPermissionsPage =
     cameraPermission !== 'authorized' ||
     microphonePermission === 'not-determined' ||
-    mediaLibraryPermission?.accessPrivileges !== 'all';
+    mediaLibraryPermission?.accessPrivileges !== 'all' ||
+    pushNotificationPermission == null ||
+    pushNotificationPermission.ios?.status ===
+      Notifications.IosAuthorizationStatus.NOT_DETERMINED;
 
   return (
     <NavigationContainer>
